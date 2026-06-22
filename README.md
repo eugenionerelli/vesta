@@ -1,52 +1,37 @@
-# 👗 Giammi — il tuo armadio virtuale con l'AI
+# Giammi
 
-**Provati i vestiti addosso senza toglierti il pigiama.** Carichi una tua foto, scegli un capo
-dal guardaroba (o ne fotografi uno nuovo) e l'AI te lo fa indossare. In più ti analizza i colori
-e ti suggerisce palette e look su misura. ✨
+Armadio virtuale per provare i vestiti addosso. Carichi una foto a figura intera, scegli un capo dal guardaroba (o lo fotografi) e un modello di virtual try-on te lo fa indossare. Stima anche i tuoi colori e propone una palette.
 
-> 🤙 **Interamente _vibe coded_** da [@eugenionerelli](https://github.com/eugenionerelli)
-> e **@gianmattiabarone** — due che programmano a sensazione, a colpi di idee, caffè ed entusiasmo. 🚀
-> _(@gianmattiabarone si farà l'account GitHub a breve — benvenuto!)_
+Vibe coded da Eugenio Nerelli e Gianmattia Barone.
 
-## Cosa fa
-- 🧍 **Virtual try-on** — ti vedi indossare i capi (modello generativo open-source).
-- 🎨 **Color analysis** — dalla foto stima sottotono pelle (ITA° in CIELAB), stagione e palette personale.
-- 🧥 **Guardaroba** con filtri (maglie / pantaloni / abiti) e ⭐ sui capi che stanno bene con la tua palette.
-- 📷 **Fotografa un capo** → sfondo rimosso automaticamente + categoria auto → finisce nel guardaroba.
-- ☁️ / 💻 **Due motori** — GPU cloud gratuita (veloce) oppure **tutto in locale sul Mac** (privato).
-- 🌗 Tema chiaro/scuro automatico, layout responsive desktop + smartphone, animazioni fluide.
+## Funzioni
+- Try-on a partire da una foto dell'utente.
+- Analisi colore: sottotono della pelle (ITA in CIELAB), stagione e palette.
+- Guardaroba filtrabile per tipo (maglie, pantaloni, abiti).
+- Aggiunta di capi da foto, con rimozione dello sfondo e categoria assegnate in automatico.
+- Generazione in locale sul Mac oppure su GPU cloud.
+- Interfaccia responsive (desktop e smartphone), tema chiaro/scuro automatico.
 
 ## Stack
-- **Frontend**: web-app in Preact (senza build) servita dal backend; gira nel browser, anche da iPhone in LAN.
-- **Backend**: FastAPI su Apple Silicon (Metal/MPS). Try-on: **CatVTON** (locale) / **IDM-VTON** (cloud HF).
-  Segmentazione: **segformer_b2_clothes** + **rembg**. Niente detectron2.
+Frontend in Preact servito dal backend, senza step di build. Backend in FastAPI su Apple Silicon (Metal/MPS). Try-on con CatVTON in locale e IDM-VTON via cloud. Segmentazione con segformer e rembg.
 
 ## Requisiti
-- Mac **Apple Silicon** (M1 o superiore) per il try-on locale (GPU Metal). Senza Apple Silicon si può
-  usare solo la modalità **cloud**.
-- **Python 3.11**.
+Mac Apple Silicon e Python 3.11 per la generazione locale. Su altri sistemi resta disponibile solo la modalità cloud.
 
 ## Avvio
 ```bash
-git clone <questo-repo> app-giammi
-cd app-giammi/backend
+cd backend
 python3.11 -m venv .venv
 .venv/bin/pip install -r ../requirements.txt
-git clone https://github.com/Zheng-Chong/CatVTON          # motore try-on (terze parti)
-.venv/bin/python download_weights.py                       # pesi modello (~4 GB)
-.venv/bin/python prep_wardrobe.py                          # guardaroba di esempio
+git clone https://github.com/Zheng-Chong/CatVTON
+.venv/bin/python download_weights.py
+.venv/bin/python prep_wardrobe.py
 .venv/bin/python -m uvicorn server:app --host 0.0.0.0 --port 8770
 ```
-Apri **http://127.0.0.1:8770** sul Mac, oppure **http://<IP-del-Mac>:8770** dal telefono sulla stessa Wi-Fi.
+Apri http://127.0.0.1:8770, oppure http://IP-DEL-MAC:8770 dallo smartphone sulla stessa rete.
 
 ## App iOS
-Scaffold SwiftUI (WKWebView verso il server del Mac) in [`ios/`](ios/).
+Scaffold SwiftUI (WKWebView verso il server) nella cartella `ios/`.
 
-## Note oneste
-- ☁️ Il **cloud** usa una GPU gratuita Hugging Face con quota limitata: quando finisce, l'app
-  **passa automaticamente al locale e te lo dice**. Imposta `HF_TOKEN` per più quota.
-- ⚖️ I motori try-on (CatVTON / IDM-VTON) hanno **licenza non commerciale**: progetto per
-  imparare e divertirsi, non da vendere così com'è.
-- 🔒 Nessuna API key nel repo: si usano variabili d'ambiente.
-
-Fatto con tanto entusiasmo (e qualche `torch.mps.empty_cache()`) 💚
+## Note
+La modalità cloud usa una GPU gratuita di Hugging Face con quota limitata: a quota esaurita l'app torna alla generazione locale. CatVTON e IDM-VTON hanno licenza non commerciale.
