@@ -50,8 +50,8 @@ def cloud_tryon(person_path: str, cloth_path: str, category: str = "upper", step
 if __name__ == "__main__":
     import sys
 
-    person = sys.argv[1] if len(sys.argv) > 1 else "/Users/eugenionerelli/dev/app-giammi/web/person_sample.jpg"
-    cloth = sys.argv[2] if len(sys.argv) > 2 else "/Users/eugenionerelli/dev/app-giammi/web/garments/top_3.jpg"
+    person = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web", "person_sample.jpg")
+    cloth = sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web", "garments", "top_3.jpg")
     t = time.time()
     img = cloud_tryon(person, cloth, "upper")
     out = "/Users/eugenionerelli/dev/app-giammi/backend/outputs/cloud_test.png"
