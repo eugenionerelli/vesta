@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vesta — il tuo camerino infinito</title>
+<meta name="description" content="Carica una foto, scegli un capo: l'AI te lo fa indossare. Analisi dei colori, guardaroba intelligente, generazione in locale o premium." />
+<link rel="icon" type="image/png" href="favicon.png" />
+<style>
+  :root{
+    --bg:#f6f5f1; --panel:#ffffff; --line:#e4e1d8; --text:#191a1a; --muted:#6d6a63;
+    --accent:#1d9e75; --accent-ink:#ffffff; --radius:18px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0e0f11; --panel:#17191c; --line:#2a2e33; --text:#f1f0ed; --muted:#a4a09a;
+           --accent:#22b083; --accent-ink:#062018; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.6}
+  a{color:inherit}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 22px}
+
+  header{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:650;font-size:19px;letter-spacing:.2px}
+  .brand svg{display:block}
+  nav a{color:var(--muted);text-decoration:none;font-size:14px;margin-left:18px}
+  nav a:hover{color:var(--text)}
+
+  .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;padding:52px 0 64px}
+  h1{font-size:44px;line-height:1.12;margin:0 0 14px;font-weight:700;letter-spacing:-.5px}
+  .sub{font-size:17px;color:var(--muted);margin:0 0 26px;max-width:46ch}
+  .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-block;text-decoration:none;font-size:15px;font-weight:550;
+    padding:13px 22px;border-radius:12px;border:1px solid var(--line);background:var(--panel)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+  .note{font-size:12.5px;color:var(--muted);margin-top:14px}
+
+  /* mockup telefono */
+  .phone{width:290px;margin:0 auto;background:var(--panel);border:1px solid var(--line);
+    border-radius:38px;padding:14px;box-shadow:0 24px 60px rgba(0,0,0,.14)}
+  .screen{border-radius:26px;overflow:hidden;border:1px solid var(--line)}
+  .scr-top{padding:14px 14px 8px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
+  .scr-hero{margin:0 12px;border-radius:14px;background:linear-gradient(180deg,#e8e6df, #d9d6cc);
+    height:250px;display:flex;align-items:flex-end;justify-content:center;position:relative}
+  @media (prefers-color-scheme: dark){ .scr-hero{background:linear-gradient(180deg,#23262a,#1a1c1f)} }
+  .scr-hero svg{display:block}
+  .paldots{display:flex;gap:6px;padding:10px 14px 4px}
+  .paldots span{width:14px;height:14px;border-radius:50%;border:1px solid rgba(128,128,128,.3)}
+  .chips{display:flex;gap:8px;padding:8px 14px 16px}
+  .chip{flex:1;aspect-ratio:1;border-radius:10px;border:1px solid var(--line)}
+
+  h2{font-size:26px;margin:0 0 8px;letter-spacing:-.3px}
+  .lead{color:var(--muted);margin:0 0 26px;font-size:15px}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding-bottom:8px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .card h3{margin:8px 0 6px;font-size:16px}
+  .card p{margin:0;font-size:13.5px;color:var(--muted)}
+  .ic{width:38px;height:38px;border-radius:10px;background:color-mix(in srgb, var(--accent) 14%, transparent);
+    display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:19px}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0 8px}
+  .step{border-left:2px solid var(--accent);padding:2px 0 2px 14px}
+  .step b{display:block;font-size:15px;margin-bottom:3px}
+  .step span{font-size:13.5px;color:var(--muted)}
+
+  section{padding:34px 0}
+  footer{border-top:1px solid var(--line);margin-top:44px;padding:26px 0 40px;font-size:13px;color:var(--muted)}
+  footer a{color:var(--muted)}
+
+  @media (max-width:840px){
+    .hero{grid-template-columns:1fr;padding:26px 0 40px}
+    h1{font-size:34px}
+    .cards{grid-template-columns:repeat(2,1fr)}
+    .steps{grid-template-columns:1fr}
+    .phone{width:260px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 512 512" aria-hidden="true">
+        <rect width="512" height="512" rx="112" fill="#1d9e75"/>
+        <circle cx="256" cy="122" r="36" fill="#fff"/><circle cx="256" cy="122" r="16" fill="#1d9e75"/>
+        <g stroke="#fff" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" fill="none">
+          <path d="M256 154 L256 206 L114 360 H398 L256 206" />
+        </g>
+      </svg>
+      Vesta
+    </div>
+    <nav>
+      <a href="#funzioni">Funzioni</a>
+      <a href="#come">Come funziona</a>
+      <a href="https://github.com/eugenionerelli/vesta">GitHub</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1>Il tuo camerino infinito.</h1>
+      <p class="sub">Carica una foto, scegli un capo: Vesta te lo fa indossare. Ti dice anche quali
+        colori ti stanno bene, con una palette calcolata sulla tua pelle, e tiene in ordine il guardaroba.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/eugenionerelli/vesta">Scarica da GitHub</a>
+        <a class="btn" href="https://github.com/eugenionerelli/vesta/blob/main/PIANO.md">Piano prodotto</a>
+      </div>
+      <p class="note">Gira in locale su Mac Apple Silicon. In modalità Premium usa modelli di
+        generazione immagini di ultima generazione con la tua API key.</p>
+    </div>
+    <div class="phone" aria-hidden="true">
+      <div class="screen">
+        <div class="scr-top"><b style="color:var(--text)">Ciao</b><span>Estate</span></div>
+        <div class="scr-hero">
+          <svg width="150" height="220" viewBox="0 0 150 220">
+            <circle cx="75" cy="38" r="22" fill="#c9a07a"/>
+            <rect x="47" y="64" width="56" height="78" rx="16" fill="#1d9e75"/>
+            <rect x="34" y="68" width="15" height="52" rx="7" fill="#c9a07a"/>
+            <rect x="101" y="68" width="15" height="52" rx="7" fill="#c9a07a"/>
+            <rect x="51" y="142" width="21" height="70" rx="8" fill="#2c2c2a"/>
+            <rect x="78" y="142" width="21" height="70" rx="8" fill="#2c2c2a"/>
+          </svg>
+        </div>
+        <div class="paldots">
+          <span style="background:#e7a7b5"></span><span style="background:#b7a7d6"></span>
+          <span style="background:#9fb8d6"></span><span style="background:#a9c2b0"></span>
+          <span style="background:#6e7e8f"></span>
+        </div>
+        <div class="chips">
+          <div class="chip" style="background:#8d939c"></div>
+          <div class="chip" style="background:#efe6d2"></div>
+          <div class="chip" style="background:#5b3a24"></div>
+          <div class="chip" style="background:#22232a"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="funzioni">
+    <h2>Cosa fa</h2>
+    <p class="lead">Quattro cose, fatte bene.</p>
+    <div class="cards">
+      <div class="card"><div class="ic">↺</div><h3>Try-on realistico</h3>
+        <p>Ti vedi addosso i capi del guardaroba, o quelli che fotografi, mantenendo viso e posa.</p></div>
+      <div class="card"><div class="ic">◐</div><h3>Palette personale</h3>
+        <p>Analisi del sottotono dalla foto: stagione, colori consigliati e capi che ti valorizzano.</p></div>
+      <div class="card"><div class="ic">▦</div><h3>Guardaroba smart</h3>
+        <p>Fotografa un capo: sfondo rimosso e categoria assegnata da soli. Filtri per tipo.</p></div>
+      <div class="card"><div class="ic">✦</div><h3>Locale o premium</h3>
+        <p>Tutto sul tuo Mac per privacy, o modelli premium con la tua API key per la qualità massima.</p></div>
+    </div>
+  </section>
+
+  <section id="come">
+    <h2>Come funziona</h2>
+    <div class="steps">
+      <div class="step"><b>1. Una foto</b><span>A figura intera, dalla webcam o dal rullino. Resta sul tuo computer.</span></div>
+      <div class="step"><b>2. Un capo</b><span>Dal guardaroba, o fotografato al volo: ci pensa Vesta a ritagliarlo.</span></div>
+      <div class="step"><b>3. Indossato</b><span>Il render arriva in pochi secondi in premium, con cache dei look già provati.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    Vibe coded da Eugenio Nerelli e Gianmattia Barone ·
+    <a href="https://github.com/eugenionerelli/vesta">Codice su GitHub</a> ·
+    I motori open inclusi hanno licenza non commerciale; la modalità Premium usa API con termini commerciali.
+  </footer>
+</div>
+</body>
+</html>

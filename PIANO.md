@@ -1,6 +1,6 @@
 # Piano di azione: da prototipo a prodotto App Store
 
-Obiettivo: portare Giammi a un livello pubblicabile sull'App Store iOS e piacevole da usare,
+Obiettivo: portare Vesta a un livello pubblicabile sull'App Store iOS e piacevole da usare,
 con generazione basata su modelli a pagamento state-of-the-art e un modello di business in
 abbonamento sostenibile per chi gestisce l'app.
 
@@ -92,7 +92,7 @@ Contromisure abuso free tier: limite per device + Sign in required, rate limitin
 2. Cattura con Vision on-device per la segmentazione della persona (istantanea, privata).
 3. Home "specchio": figura grande, outfit del giorno, azioni rapide; haptics sulle azioni.
 4. Guardaroba: griglia con categorie auto, aggiunta da foto/rullino e da share extension
-   (aggiungi un capo da Safari/Instagram con Condividi → Giammi).
+   (aggiungi un capo da Safari/Instagram con Condividi → Vesta).
 5. Try-on in coda con notifica push al termine; storico dei look; confronto prima/dopo con
    slider; salvataggio e condivisione.
 6. Paywall dopo il primo render gratuito (momento wow), trial 3 giorni, ripristino acquisti.

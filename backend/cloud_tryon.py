@@ -11,7 +11,7 @@ os.environ.setdefault("HF_HOME", os.path.join(os.path.dirname(os.path.abspath(__
 from gradio_client import Client, handle_file
 from PIL import Image
 
-SPACE = os.environ.get("GIAMMI_CLOUD_SPACE", "yisol/IDM-VTON")
+SPACE = os.environ.get("VESTA_CLOUD_SPACE", os.environ.get("GIAMMI_CLOUD_SPACE", "yisol/IDM-VTON"))
 _DESC = {"upper": "a shirt", "lower": "a pair of pants", "overall": "an outfit"}
 _client = None
 

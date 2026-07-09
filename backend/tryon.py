@@ -1,4 +1,4 @@
-"""Try-on CatVTON su Apple Silicon (MPS).
+"""Try-on CatVTON su Apple Silicon (MPS) - Vesta.
 
 Prende foto-persona + capo (flat) -> genera la maschera dell'area capo -> esegue la
 pipeline di diffusione CatVTON e salva il render. Misura i tempi reali.

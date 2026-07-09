@@ -21,7 +21,7 @@ struct WebView: UIViewRepresentable {
 }
 
 @main
-struct GiammiApp: App {
+struct VestaApp: App {
     var body: some Scene {
         WindowGroup {
             WebView(url: URL(string: SERVER_URL)!)

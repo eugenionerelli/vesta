@@ -89,11 +89,24 @@ def _err(provider: str, r: requests.Response) -> RuntimeError:
         msg = (j.get("error") or {}).get("message") or str(j)[:300]
     except Exception:
         msg = r.text[:300]
+    # errori comuni tradotti in azioni concrete
+    if r.status_code == 429 and provider == "gemini" and "free_tier" in msg:
+        return RuntimeError(
+            "Gemini: la chiave gratuita non include i modelli di generazione immagini "
+            "(limite free tier = 0). Attiva la fatturazione del progetto su aistudio.google.com "
+            "(Get API key > progetto > Set up billing): ogni immagine costa ~0,04 $."
+        )
+    if r.status_code == 429:
+        return RuntimeError(f"{provider}: limite di richieste raggiunto, riprova tra poco. ({msg[:160]})")
+    if r.status_code in (401, 403):
+        return RuntimeError(f"{provider}: chiave non valida o senza permessi. Controllala in Profilo > Modelli premium. ({msg[:160]})")
+    if r.status_code == 400 and "billing" in msg.lower():
+        return RuntimeError(f"{provider}: il piano dell'account non copre questo modello: attiva la fatturazione. ({msg[:160]})")
     return RuntimeError(f"{provider}: HTTP {r.status_code} - {msg}")
 
 
 def _openai(person: Image.Image, cloth: Image.Image, category: str, key: str) -> Image.Image:
-    model = os.environ.get("GIAMMI_OPENAI_IMAGE_MODEL", "gpt-image-1")
+    model = os.environ.get("VESTA_OPENAI_IMAGE_MODEL", os.environ.get("GIAMMI_OPENAI_IMAGE_MODEL", "gpt-image-1"))
     r = requests.post(
         "https://api.openai.com/v1/images/edits",
         headers={"Authorization": f"Bearer {key}"},
@@ -118,7 +131,7 @@ def _openai(person: Image.Image, cloth: Image.Image, category: str, key: str) ->
 
 
 def _gemini(person: Image.Image, cloth: Image.Image, category: str, key: str) -> Image.Image:
-    model = os.environ.get("GIAMMI_GEMINI_IMAGE_MODEL", "gemini-2.5-flash-image")
+    model = os.environ.get("VESTA_GEMINI_IMAGE_MODEL", os.environ.get("GIAMMI_GEMINI_IMAGE_MODEL", "gemini-2.5-flash-image"))
     body = {
         "contents": [{
             "parts": [

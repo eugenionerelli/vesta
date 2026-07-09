@@ -1,4 +1,4 @@
-"""Server di inferenza try-on (Giammi).
+"""Server di inferenza try-on (Vesta).
 
 Carica la pipeline CatVTON UNA volta all'avvio (su MPS) e la riusa per ogni richiesta,
 cosi' ogni chiamata paga solo il tempo di inferenza. Il client web lo chiama in rete locale.
@@ -57,11 +57,11 @@ DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
 # bf16 di default: dimezza la memoria (cruciale su 16GB) ed e' piu' veloce su MPS;
 # numericamente sicuro per il VAE (a differenza di fp16). Override con GIAMMI_DTYPE.
 _DTYPE = {"fp32": torch.float32, "fp16": torch.float16, "bf16": torch.bfloat16}[
-    os.environ.get("GIAMMI_DTYPE", "bf16")
+    os.environ.get("VESTA_DTYPE", os.environ.get("GIAMMI_DTYPE", "bf16"))
 ]
 _PATHS = _read_paths()
 
-print(f"[giammi] carico la pipeline su {DEVICE} ({_DTYPE}) ...")
+print(f"[vesta] carico la pipeline su {DEVICE} ({_DTYPE}) ...")
 _t0 = time.perf_counter()
 PIPE = CatVTONPipeline(
     base_ckpt=_PATHS["BASE"],
@@ -72,7 +72,7 @@ PIPE = CatVTONPipeline(
     skip_safety_check=True,
     use_tf32=True,
 )
-print(f"[giammi] pipeline pronta in {time.perf_counter() - _t0:.1f}s")
+print(f"[vesta] pipeline pronta in {time.perf_counter() - _t0:.1f}s")
 
 # una sola inferenza per volta: due diffusioni in parallelo farebbero esaurire la GPU
 _LOCK = threading.Lock()
@@ -80,7 +80,7 @@ _LOCK = threading.Lock()
 CACHE_DIR = os.path.join(BACKEND, "outputs", "cache")
 os.makedirs(CACHE_DIR, exist_ok=True)
 
-app = FastAPI(title="Giammi try-on")
+app = FastAPI(title="Vesta try-on")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -142,7 +142,7 @@ def tryon(
         try:
             result = premium_tryon(person_img, cloth_img, cat, provider or None)
         except Exception as exc:
-            print(f"[giammi] premium fallito: {exc}")
+            print(f"[vesta] premium fallito: {exc}")
             return JSONResponse(status_code=502, headers={"Cache-Control": "no-store"},
                                 content={"error": f"Generazione premium non riuscita. {exc}"})
     if mode == "cloud":
@@ -153,7 +153,7 @@ def tryon(
                 cf.write(cloth_bytes); cpath = cf.name
             result = cloud_tryon(ppath, cpath, cat)
         except Exception as exc:
-            print(f"[giammi] cloud non disponibile ({exc}); fallback locale")
+            print(f"[vesta] cloud non disponibile ({exc}); fallback locale")
             used = "local-fallback"
             result = None
 
@@ -228,4 +228,4 @@ def classify_endpoint(image: UploadFile = File(...)) -> dict:
 WEB_DIR = os.path.join(os.path.dirname(BACKEND), "web")
 if os.path.isdir(WEB_DIR):
     app.mount("/", StaticFiles(directory=WEB_DIR, html=True), name="web")
-    print(f"[giammi] client web servito da {WEB_DIR}")
+    print(f"[vesta] client web servito da {WEB_DIR}")

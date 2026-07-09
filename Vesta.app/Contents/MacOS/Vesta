@@ -1,5 +1,5 @@
 #!/bin/bash
-# Launcher Giammi: avvia il server (se non gia' attivo) e apre il browser.
+# Launcher Vesta: avvia il server (se non gia' attivo) e apre il browser.
 # Percorsi relativi al bundle: funziona ovunque venga clonato il repo.
 HERE="$(cd "$(dirname "$0")/../../.." && pwd)"
 DIR="$HERE/backend"

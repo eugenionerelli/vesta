@@ -1,4 +1,4 @@
-# Giammi
+# Vesta
 
 Armadio virtuale per provare i vestiti addosso. Carichi una foto a figura intera, scegli un capo dal guardaroba (o lo fotografi) e un modello di virtual try-on te lo fa indossare. Stima anche i tuoi colori e propone una palette.
 

@@ -1,7 +1,7 @@
 {
-  "name": "Giammi",
-  "short_name": "Giammi",
-  "description": "Armadio virtuale: prova i vestiti addosso con l'AI",
+  "name": "Vesta",
+  "short_name": "Vesta",
+  "description": "Il tuo camerino infinito: prova i vestiti addosso con l'AI",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0e0f11",

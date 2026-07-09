@@ -39,8 +39,13 @@ for path, ctype in [
 
 idx = c.get("/").text
 for frag in ["manifest.json", "apple-touch-icon", "theme-color", "Attendi: sto già creando un look",
-             "Scatta con la webcam", "prefers-color-scheme"]:
+             "Scatta con la webcam", "prefers-color-scheme", "<title>Vesta</title>", "vesta.person"]:
     check(f"index contiene '{frag[:34]}'", frag in idx)
+check("nessun 'giammi.' residuo nell'index", "giammi." not in idx.replace("localStorage.getItem('giammi.", "OKMIGRAZIONE"))
+
+mj = c.get("/manifest.json").json()
+check("manifest name Vesta", mj.get("name") == "Vesta" and mj.get("short_name") == "Vesta")
+check("favicon servito", c.get("/favicon.png").status_code == 200)
 
 # no-cache sugli html/json
 r = c.get("/")
