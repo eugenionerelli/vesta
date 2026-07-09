@@ -22,6 +22,7 @@ backend/verify_endpoint.py
 # OS / segreti (per sicurezza: niente chiavi nel repo)
 .DS_Store
 .env
+backend/.keys.json
 *.token
 *.pem
 *.key

@@ -84,5 +84,41 @@ with open(person_path, "rb") as fp, open(cloth_path, "rb") as fc:
                data={"category": "upper", "quality": "fast", "mode": "local"})
 check("/tryon cache hit", r.status_code == 200 and r.headers.get("x-cache") == "hit")
 
+# ---- premium: settings roundtrip e gestione errori (nessuna chiave reale) ----
+import premium_tryon as PT
+
+r = c.get("/settings")
+check("/settings GET", r.status_code == 200 and "premium" in r.json(), str(r.json()))
+had_key = any(r.json()["premium"].values())
+
+if not had_key:
+    r = c.post("/tryon", files={"person": ("p.jpg", open(person_path, "rb"), "image/jpeg"),
+                                "cloth": ("c.jpg", open(cloth_path, "rb"), "image/jpeg")},
+               data={"category": "upper", "quality": "fast", "mode": "premium"})
+    check("/tryon premium senza chiave -> 400 + errore", r.status_code == 400 and "error" in r.json(), str(r.json())[:90])
+
+    r = c.post("/settings", data={"provider": "openai", "key": "sk-test-fake"})
+    check("/settings POST salva", r.status_code == 200 and r.json()["premium"]["openai"] is True)
+    check(".keys.json creato 600", os.path.exists(PT.KEYS_PATH) and oct(os.stat(PT.KEYS_PATH).st_mode)[-3:] == "600")
+
+    import subprocess
+    ign = subprocess.run(["git", "check-ignore", PT.KEYS_PATH],
+                         cwd=os.path.dirname(BACKEND), capture_output=True)
+    check(".keys.json ignorato da git", ign.returncode == 0)
+
+    r = c.post("/tryon", files={"person": ("p.jpg", open(person_path, "rb"), "image/jpeg"),
+                                "cloth": ("c.jpg", open(cloth_path, "rb"), "image/jpeg")},
+               data={"category": "upper", "quality": "fast", "mode": "premium"})
+    check("/tryon premium chiave finta -> 502 + msg provider",
+          r.status_code == 502 and "openai" in r.json().get("error", ""), str(r.json())[:110])
+
+    r = c.post("/settings", data={"provider": "openai", "key": ""})
+    check("/settings POST rimuove", r.status_code == 200 and r.json()["premium"]["openai"] is False)
+else:
+    print("SKIP  test premium distruttivi (chiave reale gia' configurata)")
+
+r = c.post("/settings", data={"provider": "boh", "key": "x"})
+check("/settings provider invalido -> 400", r.status_code == 400)
+
 print("\n" + ("TUTTO OK" if not fails else f"FALLITI: {fails}"))
 sys.exit(1 if fails else 0)

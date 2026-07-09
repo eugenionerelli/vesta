@@ -27,13 +27,14 @@ import torch
 from PIL import Image
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from model.pipeline import CatVTONPipeline
 from mask_from_person import garment_mask
 from color_analysis import analyze as analyze_colors
 from cloud_tryon import cloud_tryon
+from premium_tryon import premium_tryon, resolve_provider, save_key, configured as premium_configured
 
 
 def _read_paths() -> dict:
@@ -110,22 +111,40 @@ def tryon(
     category: str = Form("upper"),
     quality: str = Form("fast"),
     mode: str = Form("local"),
-) -> StreamingResponse:
+    provider: str = Form(""),
+):
     q = QUALITY.get(quality, QUALITY["fast"])
     cat = category if category in ("upper", "lower", "overall") else "upper"
     person_bytes = person.file.read()
     cloth_bytes = cloth.file.read()
 
+    mode_key = mode
+    if mode == "premium":
+        prov = resolve_provider(provider or None)
+        if prov is None:
+            return JSONResponse(status_code=400, headers={"Cache-Control": "no-store"},
+                                content={"error": "Nessuna API key configurata: aggiungila in Profilo > Modelli premium."})
+        mode_key = f"premium:{prov}"
+
     # cache su disco: stessa persona+capo+impostazioni -> ritorno immediato (anche pre-generato)
-    key = hashlib.sha1(person_bytes + cloth_bytes + f"{cat}|{quality}|{mode}".encode()).hexdigest()
+    key = hashlib.sha1(person_bytes + cloth_bytes + f"{cat}|{quality}|{mode_key}".encode()).hexdigest()
     cache_path = os.path.join(CACHE_DIR, key + ".png")
     if os.path.exists(cache_path):
         return StreamingResponse(open(cache_path, "rb"), media_type="image/png",
-                                 headers={"X-Cache": "hit", "X-Mode": mode})
+                                 headers={"X-Cache": "hit", "X-Mode": mode_key})
 
     t0 = time.perf_counter()
     result = None
-    used = mode
+    used = mode_key
+    if mode == "premium":
+        person_img = Image.open(io.BytesIO(person_bytes)).convert("RGB")
+        cloth_img = Image.open(io.BytesIO(cloth_bytes)).convert("RGB")
+        try:
+            result = premium_tryon(person_img, cloth_img, cat, provider or None)
+        except Exception as exc:
+            print(f"[giammi] premium fallito: {exc}")
+            return JSONResponse(status_code=502, headers={"Cache-Control": "no-store"},
+                                content={"error": f"Generazione premium non riuscita. {exc}"})
     if mode == "cloud":
         try:
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as pf:
@@ -181,6 +200,20 @@ def cutout_endpoint(image: UploadFile = File(...)) -> StreamingResponse:
     out.save(buf, format="PNG")
     buf.seek(0)
     return StreamingResponse(buf, media_type="image/png")
+
+
+@app.get("/settings")
+def settings_get() -> dict:
+    # solo flag booleani: le chiavi non escono mai dal server
+    return {"premium": premium_configured()}
+
+
+@app.post("/settings")
+def settings_post(provider: str = Form(...), key: str = Form("")):
+    if provider not in ("openai", "gemini"):
+        return JSONResponse(status_code=400, content={"error": "provider non valido"})
+    save_key(provider, key)
+    return {"ok": True, "premium": premium_configured()}
 
 
 @app.post("/classify")

@@ -213,6 +213,19 @@ function App(){
   useEffect(()=>{ try{ localStorage.setItem(LS.uploads,JSON.stringify(uploads)); }catch(e){ flash('Guardaroba pieno: spazio browser esaurito'); } },[uploads]);
   useEffect(()=>{ if(analysis) localStorage.setItem(LS.analysis,JSON.stringify(analysis)); },[analysis]);
   useEffect(()=>{ localStorage.setItem(LS.mode,mode); },[mode]);
+  const [premium,setPremium]=useState({openai:false,gemini:false});
+  const [keyDraft,setKeyDraft]=useState({});
+  useEffect(()=>{ fetch(API+'/settings').then(r=>r.json()).then(j=>setPremium(j.premium||{})).catch(()=>{}); },[]);
+  async function saveProviderKey(p){
+    const fd=new FormData(); fd.append('provider',p); fd.append('key',(keyDraft[p]||'').trim());
+    try{
+      const r=await fetch(API+'/settings',{method:'POST',body:fd});
+      if(!r.ok) throw new Error();
+      const j=await r.json(); setPremium(j.premium||{});
+      flash((keyDraft[p]||'').trim()?('Chiave '+p+' salvata'):('Chiave '+p+' rimossa'));
+      setKeyDraft(d=>({...d,[p]:''}));
+    }catch(e){ flash('Errore nel salvataggio della chiave'); }
+  }
   useEffect(()=>{ if(person && !analysis) runAnalysis(person); },[]);
   useEffect(()=>{ if(!cameraOn){ if(streamRef.current){streamRef.current.getTracks().forEach(t=>t.stop());streamRef.current=null;} return; }
     setCamErr(null);
@@ -253,6 +266,7 @@ function App(){
     setError(null); setShowOriginal(false); setView('home');
     if(cache[g.id]){ setSelected(g.id); return; }
     if(loading){ flash('Attendi: sto già creando un look'); return; }
+    if(mode==='premium' && !premium.openai && !premium.gemini){ setView('profilo'); flash('Premium: aggiungi una API key in Modelli premium'); return; }
     setSelected(g.id); setLoading(true); setElapsed(0);
     timer.current=setInterval(()=>setElapsed(e=>e+1),1000);
     try{
@@ -261,7 +275,7 @@ function App(){
       const fd=new FormData(); fd.append('person',pb,'person.jpg'); fd.append('cloth',cb,'cloth.jpg');
       fd.append('category',g.category||'upper'); fd.append('quality',quality); fd.append('mode',mode);
       const res=await fetch(API+'/tryon',{method:'POST',body:fd});
-      if(!res.ok) throw new Error('HTTP '+res.status);
+      if(!res.ok){ let m='HTTP '+res.status; try{ const j=await res.json(); if(j.error) m=j.error; }catch(e){} throw new Error(m); }
       if((res.headers.get('X-Mode')||'')==='local-fallback') flash('Cloud non disponibile (quota) — generato in locale.');
       const url=URL.createObjectURL(await res.blob()); setCache(c=>({...c,[g.id]:url}));
     }catch(err){ setError('Generazione non riuscita: '+err.message+'. Il backend è avviato?'); setSelected(null); }
@@ -331,7 +345,7 @@ function App(){
       <div class="badge">${(!showOriginal&&currentRender)?'Look generato':'Tu'}</div>
       ${currentRender?html`<button class="compare" onMouseDown=${()=>setShowOriginal(true)} onMouseUp=${()=>setShowOriginal(false)} onMouseLeave=${()=>setShowOriginal(false)} onTouchStart=${()=>setShowOriginal(true)} onTouchEnd=${()=>setShowOriginal(false)}><i class="ti ti-eye"></i> originale</button>`:null}
       ${busy?html`<div class="ov"><div class="bar"><i></i></div><div class="t1">${busy}</div></div>`:null}
-      ${loading?html`<div class="ov">${selected?html`<img src=${(garments.find(x=>x.id===selected)||{}).dataURL||(API+'/'+(garments.find(x=>x.id===selected)||{}).file)} />`:null}<div class="t1">Sto creando il tuo look…</div><div class="bar"><i></i></div><div class="t2">${elapsed}s · ${mode==='cloud'?'cloud':('locale '+quality)}</div></div>`:null}
+      ${loading?html`<div class="ov">${selected?html`<img src=${(garments.find(x=>x.id===selected)||{}).dataURL||(API+'/'+(garments.find(x=>x.id===selected)||{}).file)} />`:null}<div class="t1">Sto creando il tuo look…</div><div class="bar"><i></i></div><div class="t2">${elapsed}s · ${mode==='cloud'?'cloud':mode==='premium'?'premium':('locale '+quality)}</div></div>`:null}
     </div>`;
 
   const invSlot=(g)=>html`<div class=${'slot'+(selected===g.id?' on':'')} onClick=${()=>generate(g)}>
@@ -355,6 +369,7 @@ function App(){
           <div class="row"><div class="seg">
             <button class=${mode==='local'?'on':''} onClick=${()=>setMode('local')}><i class="ti ti-device-laptop"></i> Locale</button>
             <button class=${mode==='cloud'?'on':''} onClick=${()=>setMode('cloud')}><i class="ti ti-bolt"></i> Cloud</button>
+            <button class=${mode==='premium'?'on':''} onClick=${()=>setMode('premium')}><i class="ti ti-sparkles"></i> Premium</button>
           </div><button class="iconbtn" title="Look casuale" onClick=${shuffle}><i class="ti ti-arrows-shuffle"></i></button></div>
           ${todayPick?html`<div class="today"><img src=${API+'/'+todayPick.file} />
             <div style="flex:1;min-width:0"><div class="ti1">Look del giorno</div><div class="ti2">${todayPick.label}${analysis?' · '+analysis.season:''}</div></div>
@@ -404,10 +419,22 @@ function App(){
         <label class="btn"><i class="ti ti-photo-up"></i> Cambia foto (carica)<input class="hidden-file" type="file" accept="image/*" onChange=${pickPerson} /></label>
         <button class="btn" onClick=${openCamera}><i class="ti ti-camera"></i> Cambia foto (webcam)</button>
         <div class="seg" style="margin-top:4px">
-          <button class=${mode==='local'?'on':''} onClick=${()=>setMode('local')}><i class="ti ti-device-laptop"></i> Locale · privato</button>
-          <button class=${mode==='cloud'?'on':''} onClick=${()=>setMode('cloud')}><i class="ti ti-bolt"></i> Cloud · veloce</button>
+          <button class=${mode==='local'?'on':''} onClick=${()=>setMode('local')}><i class="ti ti-device-laptop"></i> Locale</button>
+          <button class=${mode==='cloud'?'on':''} onClick=${()=>setMode('cloud')}><i class="ti ti-bolt"></i> Cloud</button>
+          <button class=${mode==='premium'?'on':''} onClick=${()=>setMode('premium')}><i class="ti ti-sparkles"></i> Premium</button>
         </div>
-        <div class="advice hint">Locale: gira sul tuo Mac (~90s, privato). Cloud: GPU gratuita Hugging Face (~25s, quota limitata; imposta HF_TOKEN per più quota).</div>
+        <div class="advice hint">Locale: sul tuo Mac (~90s, privato). Cloud: GPU gratuita (~25s, quota limitata). Premium: modello a pagamento di qualità massima (~20-60s), serve una API key qui sotto.</div>
+        <div class="sectit" style="font-size:16px;padding:6px 0 2px">Modelli premium</div>
+        <div class="advice hint" style="padding:0 0 4px">Incolla la tua API key (OpenAI o Google Gemini). Resta sul server locale, mai nel repository. Salva vuoto per rimuoverla.</div>
+        ${['openai','gemini'].map(p=>html`
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class=${'dot '+(premium[p]?'ok':'')} style="flex:0 0 auto"></span>
+          <span style="width:56px;font-size:13px;text-transform:capitalize;flex:0 0 auto">${p}</span>
+          <input type="password" autocomplete="off" placeholder=${premium[p]?'configurata':(p==='openai'?'sk-…':'AIza…')}
+            style="flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 10px;color:var(--text);font-size:12.5px"
+            value=${keyDraft[p]||''} onInput=${e=>{const v=e.target.value; setKeyDraft(d=>({...d,[p]:v}));}} />
+          <button class="btn" style="padding:9px 12px;flex:0 0 auto" onClick=${()=>saveProviderKey(p)}>Salva</button>
+        </div>`)}
         <button class="btn" onClick=${clearPerson}><i class="ti ti-trash"></i> Reimposta foto</button>
       </div>
     </div>`;
