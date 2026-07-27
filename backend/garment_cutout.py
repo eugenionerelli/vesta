@@ -9,12 +9,17 @@ from PIL import Image
 _session = None
 
 
-def cutout_to_white(img: Image.Image) -> Image.Image:
+def cutout_rgba(img: Image.Image) -> Image.Image:
+    """Rimozione sfondo: restituisce RGBA con trasparenza."""
     from rembg import remove, new_session
     global _session
     if _session is None:
         _session = new_session("u2netp")  # modello leggero
-    rgba = remove(img.convert("RGB"), session=_session)  # RGBA con alpha
+    return remove(img.convert("RGB"), session=_session).convert("RGBA")
+
+
+def cutout_to_white(img: Image.Image) -> Image.Image:
+    rgba = cutout_rgba(img)
     bg = Image.new("RGB", rgba.size, (255, 255, 255))
     bg.paste(rgba, mask=rgba.split()[-1])
     return bg

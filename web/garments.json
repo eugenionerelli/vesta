@@ -3,56 +3,56 @@
     "id": "top_1",
     "label": "Top 1",
     "category": "upper",
-    "file": "garments/top_1.jpg",
+    "file": "garments/top_1.png",
     "color": "#A2A8B0"
   },
   {
     "id": "top_2",
     "label": "Top 2",
     "category": "upper",
-    "file": "garments/top_2.jpg",
+    "file": "garments/top_2.png",
     "color": "#F1EADA"
   },
   {
     "id": "top_3",
     "label": "Top 3",
     "category": "upper",
-    "file": "garments/top_3.jpg",
+    "file": "garments/top_3.png",
     "color": "#4F2A18"
   },
   {
     "id": "top_4",
     "label": "Top 4",
     "category": "upper",
-    "file": "garments/top_4.jpg",
+    "file": "garments/top_4.png",
     "color": "#171819"
   },
   {
     "id": "dress_1",
     "label": "Abito 1",
     "category": "overall",
-    "file": "garments/dress_1.jpg",
+    "file": "garments/dress_1.png",
     "color": "#BD5346"
   },
   {
     "id": "dress_2",
     "label": "Abito 2",
     "category": "overall",
-    "file": "garments/dress_2.jpg",
+    "file": "garments/dress_2.png",
     "color": "#DBE040"
   },
   {
     "id": "dress_3",
     "label": "Abito 3",
     "category": "overall",
-    "file": "garments/dress_3.jpg",
+    "file": "garments/dress_3.png",
     "color": "#EDDEC4"
   },
   {
     "id": "dress_4",
     "label": "Abito 4",
     "category": "overall",
-    "file": "garments/dress_4.jpg",
+    "file": "garments/dress_4.png",
     "color": "#EAE0D8"
   }
 ]

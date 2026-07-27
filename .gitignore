@@ -11,6 +11,10 @@ backend/weights_paths.txt
 # Repo di terze parti: si clona a parte (vedi README)
 backend/CatVTON/
 
+# Guardaroba e foto dell'utente: restano sul suo computer
+web/wardrobe/
+backend/data/
+
 # Config locale
 .claude/
 pubblica_su_github.command
