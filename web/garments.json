@@ -1,58 +1,168 @@
 [
   {
     "id": "top_1",
-    "label": "Top 1",
+    "label": "Cardigan Snoopy",
     "category": "upper",
     "file": "garments/top_1.png",
-    "color": "#A2A8B0"
+    "color": "#A2A8B0",
+    "color_name": "grigio melange",
+    "material": "maglia di cotone, media pesantezza",
+    "silhouette": "dritto, manica lunga",
+    "construction": "scollo a V, cinque bottoni",
+    "demo": true
   },
   {
     "id": "top_2",
-    "label": "Top 2",
+    "label": "Canotta Snoopy",
     "category": "upper",
     "file": "garments/top_2.png",
-    "color": "#F1EADA"
+    "color": "#F1EADA",
+    "color_name": "panna",
+    "material": "maglia fine di cotone",
+    "silhouette": "smanicata, aderente",
+    "construction": "scollo tondo, bordi a costine rosa",
+    "demo": true
   },
   {
     "id": "top_3",
-    "label": "Top 3",
+    "label": "Jersey 95",
     "category": "upper",
     "file": "garments/top_3.png",
-    "color": "#4F2A18"
+    "color": "#4F2A18",
+    "color_name": "marrone cacao",
+    "material": "jersey pesante con inserti in rete",
+    "silhouette": "oversize, spalle scese",
+    "construction": "scollo a V con costine, numero stampato",
+    "demo": true
   },
   {
     "id": "top_4",
-    "label": "Top 4",
+    "label": "T-shirt Rhude",
     "category": "upper",
     "file": "garments/top_4.png",
-    "color": "#171819"
+    "color": "#171819",
+    "color_name": "nero",
+    "material": "jersey di cotone",
+    "silhouette": "regular, manica corta",
+    "construction": "girocollo, stampa circolare sul petto",
+    "demo": true
   },
   {
     "id": "dress_1",
-    "label": "Abito 1",
+    "label": "Abito a fiori",
     "category": "overall",
     "file": "garments/dress_1.png",
-    "color": "#BD5346"
+    "color": "#BD5346",
+    "color_name": "rosso e rosa",
+    "material": "tessuto ricamato tridimensionale",
+    "silhouette": "aderente, lunghezza al ginocchio",
+    "construction": "smanicato, fiori applicati",
+    "demo": true
   },
   {
     "id": "dress_2",
-    "label": "Abito 2",
+    "label": "Abito lime",
     "category": "overall",
     "file": "garments/dress_2.png",
-    "color": "#DBE040"
+    "color": "#DBE040",
+    "color_name": "verde lime",
+    "material": "jersey lucido drappeggiato",
+    "silhouette": "fasciante, monospalla",
+    "construction": "drappeggio sul davanti",
+    "demo": true
   },
   {
     "id": "dress_3",
-    "label": "Abito 3",
+    "label": "Abito crochet",
     "category": "overall",
     "file": "garments/dress_3.png",
-    "color": "#EDDEC4"
+    "color": "#EDDEC4",
+    "color_name": "crema",
+    "material": "crochet di cotone",
+    "silhouette": "dritto, corto",
+    "construction": "manica corta, bottoni gioiello, tasche applicate",
+    "demo": true
   },
   {
     "id": "dress_4",
-    "label": "Abito 4",
+    "label": "Abito chevron",
     "category": "overall",
     "file": "garments/dress_4.png",
-    "color": "#EAE0D8"
+    "color": "#EAE0D8",
+    "color_name": "bianco e pastello",
+    "material": "maglia di cotone lavorata",
+    "silhouette": "dritto, corto",
+    "construction": "manica corta, motivo a chevron colorato",
+    "demo": true
+  },
+  {
+    "id": "kit_lower_1",
+    "label": "Pantaloni bianchi",
+    "category": "lower",
+    "file": "garments/kit_lower_1.png",
+    "color": "#F2EBE2",
+    "demo": true,
+    "kit": true,
+    "material": "",
+    "silhouette": "",
+    "construction": "",
+    "color_name": "bianco panna",
+    "note": "ritagliato da una foto di esempio"
+  },
+  {
+    "id": "kit_lower_2",
+    "label": "Pantaloni grigio chiaro",
+    "category": "lower",
+    "file": "garments/kit_lower_2.png",
+    "color": "#D6D7D3",
+    "demo": true,
+    "kit": true,
+    "material": "",
+    "silhouette": "",
+    "construction": "",
+    "color_name": "grigio chiaro",
+    "note": "ritagliato da una foto di esempio"
+  },
+  {
+    "id": "kit_upper_3",
+    "label": "Camicia bianca",
+    "category": "upper",
+    "file": "garments/kit_upper_3.png",
+    "color": "#E1E0DB",
+    "demo": true,
+    "kit": true,
+    "material": "",
+    "silhouette": "",
+    "construction": "",
+    "color_name": "bianco",
+    "note": "ritagliato da una foto di esempio"
+  },
+  {
+    "id": "kit_lower_4",
+    "label": "Jeans",
+    "category": "lower",
+    "file": "garments/kit_lower_4.png",
+    "color": "#356182",
+    "demo": true,
+    "kit": true,
+    "material": "",
+    "silhouette": "",
+    "construction": "",
+    "color_name": "blu denim",
+    "note": "ritagliato da una foto di esempio"
+  },
+  {
+    "id": "kit_upper_5",
+    "label": "Maglione blu",
+    "category": "upper",
+    "file": "garments/kit_upper_5.png",
+    "color": "#2A3449",
+    "demo": true,
+    "kit": true,
+    "material": "",
+    "silhouette": "",
+    "construction": "",
+    "color_name": "blu notte",
+    "note": "ritagliato da una foto di esempio"
   }
 ]

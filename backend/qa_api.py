@@ -38,8 +38,10 @@ for path, ctype in [
           f"{r.status_code} {r.headers.get('content-type','')}")
 
 idx = c.get("/").text
-for frag in ["manifest.json", "apple-touch-icon", "theme-color", "Attendi: sto già creando un look",
-             "Scatta con la webcam", "prefers-color-scheme", "<title>Vesta</title>", "vesta.person"]:
+for frag in ["manifest.json", "apple-touch-icon", "theme-color", "prefers-color-scheme",
+             "<title>Vesta</title>", "vesta.person", "Sviluppa il look", "Anteprima di composizione",
+             "/api/wardrobe", "/api/import", "/api/anchors", "startViewTransition",
+             "prefers-reduced-motion", "--grain", "Didot"]:
     check(f"index contiene '{frag[:34]}'", frag in idx)
 check("nessun 'giammi.' residuo nell'index", "giammi." not in idx.replace("localStorage.getItem('giammi.", "OKMIGRAZIONE"))
 

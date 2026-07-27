@@ -3,456 +3,997 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#f4f3ef" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#0e0f11" media="(prefers-color-scheme: dark)" />
-<link rel="icon" type="image/png" href="favicon.png" />
+<meta name="theme-color" content="#E9E6DF" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#16130F" media="(prefers-color-scheme: dark)" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="icon" href="favicon.png" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <title>Vesta</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css" />
 <style>
-  /* ---- tema chiaro (default) ---- */
-  :root{
-    --bg:#f4f3ef; --panel:#ffffff; --panel2:#eceae3; --line:#e2dfd6;
-    --text:#19191a; --muted:#6c6a64; --hint:#9b978e;
-    --accent:#1d9e75; --accent-ink:#ffffff; --info:#2f6fb0; --star:#e0a32a;
-    --shadow:0 6px 24px rgba(0,0,0,.08); --radius:16px;
-  }
-  /* ---- tema scuro (segue il sistema) ---- */
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0e0f11; --panel:#17191c; --panel2:#1e2125; --line:#2a2e33;
-      --text:#f1f0ed; --muted:#a6a29a; --hint:#75716b;
-      --accent:#22b083; --accent-ink:#04130d; --info:#85b7eb; --star:#f2d06b;
-      --shadow:0 8px 30px rgba(0,0,0,.45);
-    }
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-  body{transition:background-color .3s ease,color .3s ease}
-  button{font-family:inherit;color:inherit;cursor:pointer;transition:transform .08s ease,background-color .2s,border-color .2s,opacity .2s}
-  button:active{transform:scale(.97)}
-  img{user-select:none;-webkit-user-drag:none}
+/* ============================================================ Camerino
+   Una sala prove in fondo a un atelier: buio caldo intorno, luce solo su
+   di te e sui capi. Un solo accento, ottone, come le lampadine dello
+   specchio. Didot per i titoli (il carattere delle riviste di moda, gia'
+   installato su Mac e iPhone), Avenir per l'interfaccia, monospace per i
+   numeri, che qui sono misure e secondi.
+   ============================================================ */
+:root{
+  color-scheme:dark;
+  --ground:#16130F; --surface:#1F1A15; --surface-2:#292219; --sunk:#100D0A;
+  --line:#383026; --line-soft:#261F19;
+  --ink:#F4EDE2; --ink-2:#B6A88F; --ink-3:#7E7263;
+  --brass:#C6963F; --brass-soft:#6B5223;
+  --ok:#87A97F; --warn:#D8A24A; --err:#C4664F;
+  --ok-bg:#1B241A; --warn-bg:#2A2114; --err-bg:#2A1713;
+  --glow:rgba(198,150,63,.16);
+  --f-display:Didot,"Bodoni 72","Bodoni MT",Georgia,"Times New Roman",serif;
+  --f-ui:"Avenir Next","Avenir","Helvetica Neue",system-ui,-apple-system,sans-serif;
+  --f-num:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:56px;
+  --pad:20px; --gap:14px;
+  --r:3px; --r-lg:6px; --r-sheet:16px;
+  --sh-art:drop-shadow(0 18px 28px rgba(0,0,0,.55)) drop-shadow(0 2px 4px rgba(0,0,0,.4));
+  --sh-pop:0 24px 70px rgba(0,0,0,.65);
+  --e-out:cubic-bezier(.16,1,.3,1);
+  --e-io:cubic-bezier(.32,.72,0,1);
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --ground:#E9E6DF; --surface:#F6F4EF; --surface-2:#EEEBE3; --sunk:#DEDAD1;
+  --line:#CFC8BA; --line-soft:#E0DACE;
+  --ink:#191510; --ink-2:#5B5245; --ink-3:#8B8073;
+  --brass:#9A6E1E; --brass-soft:#E4D3AE;
+  --ok:#3D6B3A; --warn:#8A5A15; --err:#9B3C28;
+  --ok-bg:#E4EDE1; --warn-bg:#F5EBD8; --err-bg:#F4E2DC;
+  --glow:rgba(154,110,30,.12);
+  --sh-art:drop-shadow(0 14px 22px rgba(40,30,15,.16)) drop-shadow(0 1px 2px rgba(40,30,15,.12));
+  --sh-pop:0 24px 60px rgba(40,30,15,.22);
+}
+@media (prefers-color-scheme:light){ :root:not([data-theme="dark"]){
+  color-scheme:light;
+  --ground:#E9E6DF; --surface:#F6F4EF; --surface-2:#EEEBE3; --sunk:#DEDAD1;
+  --line:#CFC8BA; --line-soft:#E0DACE;
+  --ink:#191510; --ink-2:#5B5245; --ink-3:#8B8073;
+  --brass:#9A6E1E; --brass-soft:#E4D3AE;
+  --ok:#3D6B3A; --warn:#8A5A15; --err:#9B3C28;
+  --ok-bg:#E4EDE1; --warn-bg:#F5EBD8; --err-bg:#F4E2DC;
+  --glow:rgba(154,110,30,.12);
+  --sh-art:drop-shadow(0 14px 22px rgba(40,30,15,.16)) drop-shadow(0 1px 2px rgba(40,30,15,.12));
+  --sh-pop:0 24px 60px rgba(40,30,15,.22);
+}}
 
-  .app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;padding-bottom:78px}
-  .content{flex:1;animation:fade .28s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--ground);color:var(--ink);font-family:var(--f-ui);
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+/* la grana tiene insieme le superfici e toglie l'aria di schermata piatta */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.5;
+  background-image:var(--grain);background-size:180px 180px;mix-blend-mode:overlay}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:none;padding:0;color:inherit}
+img{max-width:100%;-webkit-user-drag:none}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:1.5px solid var(--brass);outline-offset:3px;border-radius:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.ico{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;
+  stroke-linejoin:round;flex:none}
 
-  /* header */
-  .top{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 18px 6px}
-  .hello{font-size:21px;font-weight:600}
-  .sub{font-size:12px;color:var(--muted);margin-top:2px;text-transform:capitalize}
-  .chip{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:12px;color:var(--muted)}
-  .dot{width:7px;height:7px;border-radius:50%;background:#8a8a8a}.dot.ok{background:var(--accent)}.dot.off{background:#d8743a}
+.app{min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+.page{padding:0 var(--pad) var(--s7);max-width:1380px;margin:0 auto;width:100%}
+/* il cambio di vista e' una dissolvenza vera, non un salto */
+@media(prefers-reduced-motion:no-preference){
+  html:not(.vt) .page{animation:enter .42s var(--e-out) both}
+  @keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  ::view-transition-old(root){animation:vtout .22s var(--e-out) both}
+  ::view-transition-new(root){animation:vtin .34s var(--e-out) both}
+  @keyframes vtout{to{opacity:0}}
+  @keyframes vtin{from{opacity:0;transform:translateY(8px)}}
+}
 
-  .sectit{font-size:18px;font-weight:600;padding:14px 18px 8px}
-  .muted{color:var(--muted)} .hint{color:var(--hint)}
+/* --------------------------------------------------------- tipografia */
+.title{font-family:var(--f-display);font-size:clamp(30px,5vw,42px);line-height:1.04;font-weight:400;
+  letter-spacing:-.015em;margin:var(--s6) 0 var(--s1);text-wrap:balance}
+.meta{font-family:var(--f-num);font-size:10.5px;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--ink-3);font-variant-numeric:tabular-nums}
+.lead{font-size:16px;line-height:1.55;color:var(--ink-2);margin:0 0 var(--s4);max-width:56ch}
+.cap{font-size:13px;color:var(--ink-2)}
+.hint{font-size:12.5px;color:var(--ink-3);margin-top:var(--s2);max-width:60ch}
+.hr{height:1px;background:var(--line-soft);border:0;margin:var(--s6) 0 var(--s5)}
 
-  /* hero */
-  .hero{position:relative;margin:6px 16px;border-radius:var(--radius);overflow:hidden;background:var(--panel);border:1px solid var(--line);min-height:340px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
-  .hero img{width:100%;height:auto;max-height:64vh;object-fit:contain;display:block;animation:fade .4s ease}
-  .badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.5);color:#fff;border-radius:9px;padding:5px 9px;font-size:11px;backdrop-filter:blur(6px)}
-  .compare{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:9px;padding:6px 9px;font-size:12px;display:flex;gap:6px;align-items:center}
-  .ov{position:absolute;inset:0;background:rgba(8,9,10,.66);backdrop-filter:blur(3px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#fff;text-align:center;padding:24px}
-  .ov img{width:86px;height:86px;border-radius:12px;object-fit:cover;animation:pulse 1.4s ease-in-out infinite}
-  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
-  .bar{width:170px;height:4px;border-radius:3px;background:rgba(255,255,255,.2);overflow:hidden}
-  .bar i{display:block;height:100%;width:40%;background:var(--accent);border-radius:3px;animation:slide 1.3s ease-in-out infinite}
-  @keyframes slide{0%{margin-left:-40%}100%{margin-left:100%}}
-  .t1{font-size:15px;font-weight:500}.t2{font-size:12px;opacity:.8}
+/* --------------------------------------------------------- rubriche */
+.rubriche{display:flex;gap:var(--s2);overflow-x:auto;padding:var(--s4) 0 var(--s3);position:sticky;top:0;
+  z-index:5;background:linear-gradient(var(--ground) 72%,transparent);scrollbar-width:none}
+.rubriche::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);border-radius:99px;padding:7px 15px;font-size:12.5px;
+  color:var(--ink-2);background:transparent;white-space:nowrap;
+  transition:color .18s var(--e-out),border-color .18s var(--e-out),background .18s var(--e-out)}
+.chip:hover{color:var(--ink);border-color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.chip .n{font-family:var(--f-num);font-size:10px;opacity:.6;margin-left:7px;font-variant-numeric:tabular-nums}
 
-  /* palette */
-  .palette{display:flex;gap:7px;align-items:center;padding:4px 18px 2px;flex-wrap:wrap}
-  .palette .lab{font-size:11px;color:var(--hint)}
-  .sw{width:18px;height:18px;border-radius:50%;border:1px solid rgba(128,128,128,.25)}
-  .advice{font-size:12px;color:var(--muted);padding:4px 18px 8px;line-height:1.55}
+/* --------------------------------------------------------- tavole */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gap) var(--gap);padding-bottom:var(--s5)}
+@media(min-width:640px){ .grid{grid-template-columns:repeat(3,1fr)} :root{--pad:32px;--gap:20px} }
+@media(min-width:1024px){ .grid{grid-template-columns:repeat(4,1fr)} :root{--pad:44px;--gap:26px} }
+@media(min-width:1440px){ .grid{grid-template-columns:repeat(5,1fr)} }
 
-  /* controlli */
-  .row{display:flex;gap:10px;align-items:center;padding:8px 16px}
-  .seg{display:flex;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:3px;flex:1}
-  .seg button{flex:1;border:none;background:transparent;color:var(--muted);font-size:12.5px;padding:8px 4px;border-radius:9px;display:flex;align-items:center;justify-content:center;gap:6px}
-  .seg button.on{background:var(--panel);color:var(--text);font-weight:500;box-shadow:var(--shadow)}
-  .iconbtn{border:1px solid var(--line);background:var(--panel);border-radius:12px;width:46px;height:46px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--text)}
+.plate{display:block;text-align:left;width:100%;position:relative}
+.plate .art{position:relative;aspect-ratio:4/5;background:
+    radial-gradient(120% 80% at 50% 18%,var(--surface-2) 0%,var(--surface) 55%,var(--sunk) 100%);
+  border:1px solid var(--line-soft);border-radius:var(--r);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .35s var(--e-out),box-shadow .35s var(--e-out)}
+.plate .art::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),transparent 30%)}
+.plate .art img{width:100%;height:100%;object-fit:contain;padding:13%;filter:var(--sh-art);
+  transition:transform .45s var(--e-out)}
+.plate:hover .art{border-color:var(--brass-soft);box-shadow:0 0 0 1px var(--brass-soft)}
+.plate:hover .art img{transform:translateY(-5px) scale(1.015)}
+.plate .nome{font-family:var(--f-display);font-size:17px;line-height:1.25;margin:var(--s3) 0 3px;
+  letter-spacing:-.005em}
+.plate .riga{display:flex;align-items:center;gap:7px}
+.sw{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(128,128,128,.4);flex:none}
+.badge{position:absolute;top:8px;left:8px;font-family:var(--f-num);font-size:9.5px;text-transform:uppercase;
+  letter-spacing:.12em;padding:4px 8px;border-radius:2px;color:var(--ink-3);
+  background:color-mix(in srgb,var(--surface) 78%,transparent);
+  backdrop-filter:blur(8px);border:1px solid var(--line-soft)}
+.badge.warn{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+.badge.err{background:var(--err-bg);color:var(--err);border-color:transparent}
 
-  /* card look del giorno */
-  .today{display:flex;align-items:center;gap:12px;margin:6px 16px;padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
-  .today img{width:48px;height:48px;border-radius:10px;object-fit:cover}
-  .today .ti1{font-size:14px;font-weight:500}.today .ti2{font-size:11.5px;color:var(--muted)}
-  .pill{background:var(--accent);color:var(--accent-ink);border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:500}
+/* --------------------------------------------------------- controlli */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--line);
+  background:transparent;border-radius:99px;padding:11px 20px;font-size:14px;min-height:44px;color:var(--ink);
+  transition:background .2s var(--e-out),border-color .2s var(--e-out),transform .12s var(--e-out),opacity .2s}
+.btn:hover{border-color:var(--ink-3);background:var(--surface)}
+.btn:active{transform:scale(.985)}
+.btn.primary{background:var(--ink);color:var(--ground);border-color:var(--ink);font-weight:500}
+.btn.primary:hover{background:#fff;border-color:#fff}
+.btn.ghost{border-color:transparent}
+.btn.ghost:hover{background:var(--surface)}
+.btn.wide{width:100%}
+.btn.small{padding:8px 14px;min-height:38px;font-size:13px}
+.btn[disabled]{opacity:.35;cursor:not-allowed;transform:none}
+.sub{font-family:var(--f-num);font-size:11px;color:var(--ink-3);text-align:center;margin-top:var(--s3);
+  letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.field{width:100%;background:var(--sunk);border:1px solid var(--line);border-radius:var(--r);
+  padding:11px 13px;font-size:14px;min-height:44px;transition:border-color .2s}
+.field:focus{border-color:var(--brass);outline:none}
+.seg{display:flex;background:var(--sunk);border:1px solid var(--line);border-radius:99px;padding:3px;gap:2px}
+.seg button{flex:1;border-radius:99px;padding:9px 8px;font-size:13px;color:var(--ink-3);min-height:38px;
+  transition:color .2s var(--e-out),background .3s var(--e-out)}
+.seg button:hover{color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--ink)}
+.row{display:flex;align-items:center;gap:var(--s3)}
+.rowb{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);padding:var(--s3) 0;
+  border-bottom:1px solid var(--line-soft)}
 
-  /* filtri */
-  .filters{display:flex;gap:8px;overflow-x:auto;padding:6px 16px 8px}
-  .filters::-webkit-scrollbar{display:none}
-  .fchip{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:20px;padding:7px 14px;font-size:12.5px}
-  .fchip.on{background:var(--text);color:var(--bg);border-color:var(--text)}
+/* --------------------------------------------------------- navigazione */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:space-around;
+  align-items:center;padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb,var(--ground) 86%,transparent);backdrop-filter:blur(18px) saturate(1.2);
+  border-top:1px solid var(--line-soft)}
+nav a,nav button{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink-3);
+  font-family:var(--f-num);font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;
+  padding:7px 10px;min-width:58px;min-height:46px;justify-content:center;position:relative;
+  transition:color .25s var(--e-out)}
+nav a:hover{color:var(--ink-2)}
+nav a[aria-current="page"]{color:var(--ink)}
+nav a[aria-current="page"]::before{content:"";position:absolute;top:0;left:50%;width:16px;height:1.5px;
+  background:var(--brass);transform:translateX(-50%);box-shadow:0 0 8px var(--brass)}
+.wordmark{display:none;font-family:var(--f-display);font-size:22px;letter-spacing:.02em;color:var(--ink);
+  position:absolute;left:var(--pad);top:50%;transform:translateY(-50%)}
+nav .mid{background:var(--ink);color:var(--ground);border-radius:50%;width:48px;height:48px;margin-top:-18px;
+  box-shadow:0 8px 24px rgba(0,0,0,.5);transition:transform .3s var(--e-out)}
+nav .mid:hover{transform:translateY(-2px) scale(1.04)}
+nav .mid .ico{width:21px;height:21px}
+@media(min-width:1024px){
+  .app{padding-bottom:0;padding-top:64px}
+  nav{top:0;bottom:auto;border-top:0;border-bottom:1px solid var(--line-soft);height:64px;
+    justify-content:center;gap:var(--s6);padding:0 var(--pad)}
+  nav a,nav button{flex-direction:row;gap:9px;font-size:11px;letter-spacing:.08em}
+  nav a[aria-current="page"]::before{top:auto;bottom:-1px;width:100%}
+  nav .mid{margin-top:0;width:40px;height:40px}
+  .wordmark{display:block}
+  .two{display:grid;grid-template-columns:minmax(0,7fr) minmax(320px,5fr);gap:var(--s7);align-items:start}
+}
 
-  /* inventario / griglia */
-  .inv{display:flex;gap:10px;overflow-x:auto;padding:4px 16px 6px}
-  .inv::-webkit-scrollbar{display:none}
-  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:6px 16px 16px}
-  .slot{flex:0 0 auto;width:66px}
-  .card .box,.slot .box{position:relative;border-radius:12px;overflow:hidden;border:1.5px solid var(--line);background:var(--panel2);box-shadow:var(--shadow)}
-  .slot .box{width:66px;height:66px;display:flex;align-items:center;justify-content:center}
-  .card .box{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
-  .slot.on .box,.card.on .box{border-color:var(--accent);border-width:2px}
-  .box img{width:100%;height:100%;object-fit:cover}
-  .box i.ph{font-size:24px;color:var(--muted)}
-  .cdot{position:absolute;bottom:4px;right:4px;width:11px;height:11px;border-radius:50%;border:1px solid rgba(0,0,0,.4)}
-  .star{position:absolute;top:3px;left:4px;color:var(--star);font-size:13px;filter:drop-shadow(0 0 1px rgba(0,0,0,.5))}
-  .done{position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:var(--accent);border:1px solid var(--panel)}
-  .cap{font-size:11px;color:var(--muted);text-align:center;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .slot.on .cap,.card.on .cap{color:var(--accent)}
+/* --------------------------------------------------------- specchio */
+.stage{position:relative;background:radial-gradient(90% 60% at 50% 8%,var(--surface) 0%,var(--sunk) 70%);
+  border:1px solid var(--line-soft);border-radius:var(--r-lg);overflow:hidden;aspect-ratio:3/4;
+  max-height:62svh;display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),inset 0 -60px 90px -60px rgba(0,0,0,.8)}
+@media(min-width:1024px){ .stage{max-height:min(72svh,720px)} }
+/* la barra di lampadine in alto: e' uno specchio da camerino */
+.stage::before{content:"";position:absolute;top:0;left:12%;right:12%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--brass),transparent);opacity:.55}
+.stage::after{content:"";position:absolute;top:-70px;left:50%;width:70%;height:150px;transform:translateX(-50%);
+  background:radial-gradient(50% 60% at 50% 50%,var(--glow),transparent 70%);pointer-events:none}
+.stage>img.base{width:100%;height:100%;object-fit:contain;position:relative;z-index:1}
+.stage .spot{position:absolute;left:50%;bottom:-6%;width:78%;height:26%;transform:translateX(-50%);
+  background:radial-gradient(50% 50% at 50% 50%,var(--glow),transparent 72%);pointer-events:none;z-index:0}
+.layer{position:absolute;object-fit:contain;filter:var(--sh-art);pointer-events:none;z-index:2}
+@media(prefers-reduced-motion:no-preference){
+  .layer{animation:drop .5s var(--e-out) both}
+  @keyframes drop{from{opacity:0;transform:translateY(-10px) scale(1.015)}to{opacity:1;transform:none}}
+  /* il render arriva come una fotografia che si sviluppa */
+  .developing{animation:develop .9s var(--e-out) both}
+  @keyframes develop{
+    from{opacity:0;filter:blur(16px) saturate(.5) contrast(.9);transform:scale(1.015)}
+    60%{opacity:1}
+    to{opacity:1;filter:none;transform:none}}
+}
+.stage .tag{position:absolute;top:12px;left:12px;z-index:3;font-family:var(--f-num);font-size:9.5px;
+  text-transform:uppercase;letter-spacing:.14em;color:var(--ink-2);background:rgba(0,0,0,.35);
+  backdrop-filter:blur(8px);border:1px solid var(--line-soft);border-radius:2px;padding:5px 9px}
+.stage .cmp{position:absolute;top:10px;right:10px;z-index:3}
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s2);margin:var(--s5) 0 var(--s4)}
+.slot{border:1px solid var(--line-soft);border-radius:var(--r);background:var(--sunk);aspect-ratio:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px;
+  color:var(--ink-3);transition:border-color .25s var(--e-out),background .25s var(--e-out),color .25s}
+.slot:hover:not([disabled]){border-color:var(--ink-3);color:var(--ink-2)}
+.slot.full{border-style:solid;border-color:var(--line);background:var(--surface);color:var(--ink-2)}
+.slot.full:hover{border-color:var(--brass-soft)}
+.slot img{width:100%;height:66%;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45))}
+.slot .k{font-family:var(--f-num);font-size:9px;text-transform:uppercase;letter-spacing:.12em}
+.slot[disabled]{opacity:.3}
+.prop{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3);margin-top:var(--s3)}
+.propcard{text-align:left}
+.propcard .art{aspect-ratio:1;background:var(--sunk);border:1px solid var(--line-soft);border-radius:var(--r);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .25s var(--e-out)}
+.propcard:hover .art{border-color:var(--brass-soft)}
+.propcard .art img{width:100%;height:100%;object-fit:contain;padding:12%;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,.45));transition:transform .4s var(--e-out)}
+.propcard:hover .art img{transform:translateY(-3px)}
+.propcard .pl{font-family:var(--f-display);font-size:14px;margin:7px 0 2px;line-height:1.2}
+.progress{height:2px;background:var(--line);border-radius:2px;overflow:hidden;width:min(220px,60%)}
+.progress i{display:block;height:100%;background:var(--brass);transition:width 1s linear;
+  box-shadow:0 0 10px var(--brass)}
+.veil{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:var(--s3);background:color-mix(in srgb,var(--ground) 72%,transparent);
+  backdrop-filter:blur(3px);text-align:center;padding:var(--s5)}
 
-  /* nav */
-  nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;align-items:center;
-    background:var(--panel);border-top:1px solid var(--line);padding:8px 10px 16px;z-index:30;max-width:480px;margin:0 auto}
-  nav .it{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--hint);font-size:10px;background:none;border:none}
-  nav .it.on{color:var(--text)} nav .it i{font-size:23px}
-  nav .scan{width:50px;height:50px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;margin-top:-18px;box-shadow:var(--shadow)}
-  nav .scan i{font-size:26px}
+/* --------------------------------------------------------- fogli */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40;backdrop-filter:blur(3px)}
+@media(prefers-reduced-motion:no-preference){ .sheet-bg{animation:fadein .3s var(--e-out) both}
+  @keyframes fadein{from{opacity:0;backdrop-filter:blur(0)}to{opacity:1}} }
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--surface);
+  border-top:1px solid var(--line);border-radius:var(--r-sheet) var(--r-sheet) 0 0;max-height:92svh;
+  overflow:auto;box-shadow:var(--sh-pop);padding:var(--s3) var(--pad) calc(var(--s7) + env(safe-area-inset-bottom))}
+@media(prefers-reduced-motion:no-preference){ .sheet{animation:up .42s var(--e-io) both}
+  @keyframes up{from{transform:translateY(101%)}to{transform:none}} }
+@media(min-width:1024px){
+  .sheet{top:0;bottom:0;right:0;left:auto;width:min(440px,92vw);max-height:100svh;border-radius:0;
+    border-top:0;border-left:1px solid var(--line)}
+  @media(prefers-reduced-motion:no-preference){ .sheet{animation:side .42s var(--e-io) both}
+    @keyframes side{from{transform:translateX(101%)}to{transform:none}} }
+}
+.sheet.full{top:0;max-height:100svh;border-radius:0;width:100%;left:0;right:0;border-left:0}
+.sheet-h{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
+  position:sticky;top:0;background:var(--surface);padding:var(--s4) 0 var(--s3);z-index:2;
+  border-bottom:1px solid var(--line-soft);margin-bottom:var(--s4)}
+.sheet-h h2{font-family:var(--f-display);font-size:24px;font-weight:400;margin:0;letter-spacing:-.01em}
 
-  /* onboarding */
-  .onb{min-height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:30px 24px;max-width:480px;margin:0 auto}
-  .onb h1{font-size:25px;margin:0;font-weight:600}
-  .onb p{font-size:14px;color:var(--muted);line-height:1.6;margin:6px 0 0}
-  .drop{border:1.5px dashed var(--line);border-radius:16px;padding:30px 18px;text-align:center;background:var(--panel);display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:var(--shadow)}
-  .drop i{font-size:32px;color:var(--accent)} .drop .d1{font-size:15px;font-weight:500}.drop .d2{font-size:12px;color:var(--hint)}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:13px;padding:13px 16px;font-size:14px;font-weight:500;border:1px solid var(--line);background:var(--panel);color:var(--text);box-shadow:var(--shadow)}
-  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-  .hidden-file{display:none}
+/* --------------------------------------------------------- revisione */
+.cand{display:flex;gap:var(--s4);padding:var(--s4) 0;border-bottom:1px solid var(--line-soft);
+  align-items:flex-start;transition:opacity .3s var(--e-out)}
+.cand .th{width:88px;height:110px;flex:none;background:var(--sunk);border:1px solid var(--line-soft);
+  border-radius:var(--r);object-fit:contain;padding:7px}
+.cand.off{opacity:.35}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:var(--s2) 0}
+.tag{border:1px solid var(--line);border-radius:99px;padding:5px 11px;font-family:var(--f-num);font-size:9.5px;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);background:transparent;transition:all .2s}
+.tag:hover{color:var(--ink-2);border-color:var(--ink-3)}
+.tag[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.dl{margin:var(--s3) 0 0}
+.dl dt{font-family:var(--f-num);font-size:9.5px;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--ink-3);margin-top:var(--s3)}
+.dl dd{margin:3px 0 0;font-size:13.5px;color:var(--ink-2);line-height:1.5}
 
-  /* profilo */
-  .prow{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--line)}
-  .pthumb{width:64px;height:64px;border-radius:12px;object-fit:cover;border:1px solid var(--line)}
-
-  /* camera overlay */
-  .cam{position:fixed;inset:0;background:#000;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px}
-  .cam-v{max-width:100%;max-height:74vh;border-radius:16px;object-fit:contain;background:#111}
-  .cam-bar{display:flex;gap:12px}
-  .cam-err{color:#f0b9a6;font-size:13px;text-align:center;padding:0 24px;max-width:420px}
-
-  /* notice */
-  .notice{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:70;background:var(--text);color:var(--bg);
-    padding:10px 16px;border-radius:12px;font-size:13px;box-shadow:var(--shadow);max-width:90%;text-align:center;animation:fade .25s ease}
-  .err{margin:8px 16px;background:#3a1c14;color:#f0b9a6;border:1px solid #5a2a1c;border-radius:10px;padding:10px 12px;font-size:12.5px}
-  @media (prefers-color-scheme: light){ .err{background:#fbeae6;color:#9a3a22;border-color:#f0c5b8} }
-
-  /* ---- desktop ---- */
-  @media (min-width:900px){
-    .app{max-width:980px;padding-bottom:0;padding-top:64px}
-    .home2{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start;padding:0 8px}
-    .hero{max-height:none}.hero img{max-height:72vh}
-    .grid{grid-template-columns:repeat(4,1fr)}
-    nav{top:0;bottom:auto;max-width:100%;justify-content:center;gap:28px;border-top:none;border-bottom:1px solid var(--line);padding:10px}
-    nav .it{flex-direction:row;gap:7px;font-size:13px}nav .it i{font-size:20px}
-    nav .scan{margin-top:0;width:42px;height:42px}nav .scan i{font-size:22px}
-  }
+/* --------------------------------------------------------- stati */
+.pill-job{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));
+  z-index:30;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:99px;
+  padding:11px 18px;display:flex;gap:11px;align-items:center;box-shadow:var(--sh-pop);font-size:13px;
+  max-width:92vw}
+@media(min-width:1024px){ .pill-job{bottom:26px} }
+.pill-job .dot{width:6px;height:6px;border-radius:50%;background:var(--brass);flex:none;
+  animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.35;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+.snack{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom));
+  z-index:45;background:var(--surface-2);border:1px solid var(--line);box-shadow:var(--sh-pop);
+  border-radius:var(--r);padding:13px 17px;font-size:13.5px;display:flex;gap:14px;align-items:center;
+  max-width:92vw}
+@media(prefers-reduced-motion:no-preference){ .snack{animation:snackin .35s var(--e-out) both}
+  @keyframes snackin{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}} }
+.empty{border:1px dashed var(--line);border-radius:var(--r-lg);padding:var(--s7) var(--s5);text-align:center;
+  color:var(--ink-2);background:linear-gradient(var(--surface),var(--sunk))}
+.empty p{margin:0 0 var(--s4);font-size:15px}
+.skel{background:linear-gradient(100deg,var(--surface) 30%,var(--surface-2) 50%,var(--surface) 70%);
+  background-size:220% 100%;animation:sk 1.6s linear infinite;border-radius:var(--r)}
+@keyframes sk{to{background-position:-220% 0}}
+.err-box{background:var(--err-bg);color:var(--err);border-radius:var(--r);padding:12px 15px;font-size:13px;
+  margin:var(--s3) 0;border:1px solid color-mix(in srgb,var(--err) 30%,transparent)}
+.hidden-file{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+@media(prefers-reduced-motion:reduce){ *{animation-duration:.01ms !important;transition-duration:.01ms !important} }
 </style>
+
 </head>
 <body>
 <div id="app"></div>
 <script type="module">
 import { h, render } from 'https://esm.sh/preact@10.23.1';
-import { useState, useEffect, useRef } from 'https://esm.sh/preact@10.23.1/hooks';
+import { useState, useEffect, useRef, useCallback } from 'https://esm.sh/preact@10.23.1/hooks';
 import htm from 'https://esm.sh/htm@3.1.1';
 const html = htm.bind(h);
 
+/* ---------------------------------------------------------------- base */
 const API = location.protocol === 'file:' ? 'http://127.0.0.1:8770' : '';
-const LS = { person:'vesta.person', uploads:'vesta.uploads', analysis:'vesta.analysis', mode:'vesta.mode' };
-try{ ['person','uploads','analysis','mode'].forEach(k=>{ const o=localStorage.getItem('giammi.'+k); if(o!==null && localStorage.getItem('vesta.'+k)===null) localStorage.setItem('vesta.'+k,o); }); }catch(e){}
-const SEASONS = ['Inverno','Inverno','Primavera','Primavera','Primavera','Estate','Estate','Estate','Autunno','Autunno','Autunno','Inverno'];
-const FALLBACK_PALETTE = ['#1d9e75','#d85a30','#e9dcc4','#27496b','#7a8a3a'];
-const FILTERS = [['all','Tutti'],['upper','Maglie'],['lower','Pantaloni'],['overall','Abiti']];
-const CATLABEL = {upper:'Maglia',lower:'Pantaloni',overall:'Abito'};
+const LS = { person:'vesta.person', analysis:'vesta.analysis', mode:'vesta.mode', quality:'vesta.quality',
+             theme:'vesta.theme', timing:'vesta.timing', review:'vesta.review', demo:'vesta.demo' };
 
-const todayLabel = () => new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
-const weatherSeason = () => SEASONS[new Date().getMonth()];
+const CATS = [['upper','Sopra'],['lower','Sotto'],['overall','Interi'],['outerwear','Capispalla'],
+              ['shoes','Scarpe'],['accessory','Accessori']];
+const CATNAME = Object.fromEntries(CATS);
+const SLOTS = [['upper','Sopra'],['lower','Sotto'],['overall','Intero'],['shoes','Scarpe']];
+const ANCHORS = { upper:[.21,.205,.79,.555,2], lower:[.29,.50,.71,.88,1], overall:[.21,.205,.79,.86,2],
+                  outerwear:[.17,.19,.83,.62,3], shoes:[.33,.86,.67,.985,4], accessory:[.40,.10,.60,.30,5] };
+const DEFAULT_T = { 'local|fast':80, 'local|balanced':130, 'local|high':300, 'cloud|fast':40, 'premium|fast':14 };
 
-function downscale(file, max=1024){
+const ICONS = {
+  importa:'M12 16V4M8 8l4-4 4 4M4 15v3a2 2 0 002 2h12a2 2 0 002-2v-3',
+  fotocamera:'M4 8h3l2-2h6l2 2h3v11H4z M12 16.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z',
+  cerca:'M11 18a7 7 0 100-14 7 7 0 000 14zM20 20l-4-4',
+  chiudi:'M6 6l12 12M18 6L6 18', indietro:'M15 5l-7 7 7 7', piu:'M12 5v14M5 12h14',
+  cestino:'M5 7h14M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3',
+  matita:'M4 20h4L20 8l-4-4L4 16z', scarica:'M12 4v12M8 12l4 4 4-4M5 20h14',
+  riprova:'M20 12a8 8 0 11-2.3-5.7M20 4v5h-5', info:'M12 21a9 9 0 100-18 9 9 0 000 18zM12 11v6M12 7.4v.2',
+  blocco:'M7 11V8a5 5 0 0110 0v3M5 11h14v9H5z', occhio:'M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6zM12 15a3 3 0 100-6 3 3 0 000 6z',
+  dado:'M3 7h4l10 10h4M17 7h4M3 17h4l3-3M18 4l3 3-3 3M18 14l3 3-3 3',
+  guardaroba:'M12 7a2 2 0 112-2M12 7v2M3 17l9-6 9 6v2H3z',
+  specchio:'M12 12a4 4 0 100-8 4 4 0 000 8zM5 20a7 7 0 0114 0',
+  lookbook:'M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3zM5 17a3 3 0 013-3h11',
+  profilo:'M4 8h10M18 8h2M4 16h4M12 16h8M14 5v6M8 13v6',
+};
+const Icon = ({n, s=20}) => html`<svg class="ico" viewBox="0 0 24 24" style=${`width:${s}px;height:${s}px`} aria-hidden="true">
+  ${(ICONS[n]||'').split(' M').map((d,i)=>html`<path d=${i?'M'+d:d} />`)}</svg>`;
+
+/* grana: una texture leggera cucita una volta sola, per togliere l'effetto "schermata piatta" */
+(function grain(){
+  const n=180, c=document.createElement('canvas'); c.width=c.height=n;
+  const x=c.getContext('2d'), d=x.createImageData(n,n);
+  for(let i=0;i<d.data.length;i+=4){ const v=200+Math.random()*55;
+    d.data[i]=d.data[i+1]=d.data[i+2]=v; d.data[i+3]=Math.random()*22; }
+  x.putImageData(d,0,0);
+  document.documentElement.style.setProperty('--grain',`url(${c.toDataURL()})`);
+})();
+const supportsVT = typeof document.startViewTransition === 'function';
+if(supportsVT) document.documentElement.classList.add('vt');
+function withTransition(fn){
+  if(!supportsVT || matchMedia('(prefers-reduced-motion: reduce)').matches){ fn(); return; }
+  document.startViewTransition(async()=>{ fn();
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); });
+}
+
+const ls = { get:(k,d)=>{ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
+             set:(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch(e){ return false; } } };
+const src = (it) => it.dataURL || (API + '/' + it.file);
+const fmtDate = (t) => new Date(t*1000||Date.now()).toLocaleDateString('it-IT',{day:'numeric',month:'long'});
+const hexRgb = h => { h=(h||'').replace('#',''); return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16)||0); };
+const dist = (a,b) => { const x=hexRgb(a),y=hexRgb(b); return Math.hypot(x[0]-y[0],x[1]-y[1],x[2]-y[2]); };
+
+function downscale(file, max=1600){
   return new Promise((res,rej)=>{ const fr=new FileReader();
-    fr.onload=()=>{ const img=new Image(); img.onload=()=>{ const s=Math.min(1,max/Math.max(img.width,img.height));
-      const w=Math.round(img.width*s),hh=Math.round(img.height*s); const c=document.createElement('canvas'); c.width=w;c.height=hh;
-      c.getContext('2d').drawImage(img,0,0,w,hh); res(c.toDataURL('image/jpeg',0.92)); };
-      img.onerror=rej; img.src=fr.result; }; fr.onerror=rej; fr.readAsDataURL(file); });
+    fr.onload=()=>{ const img=new Image();
+      img.onload=()=>{ const s=Math.min(1,max/Math.max(img.width,img.height));
+        const c=document.createElement('canvas'); c.width=Math.round(img.width*s); c.height=Math.round(img.height*s);
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        c.toBlob(b=>res(b),'image/jpeg',0.92); };
+      img.onerror=rej; img.src=fr.result; };
+    fr.onerror=rej; fr.readAsDataURL(file); });
 }
-function blobToDataURL(b){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(b);});}
-function dominantColor(src){return new Promise((res)=>{ const img=new Image(); img.onload=()=>{ const c=document.createElement('canvas');c.width=48;c.height=48;
-  const x=c.getContext('2d'); x.drawImage(img,0,0,48,48); const d=x.getImageData(0,0,48,48).data; const px=[];
-  for(let i=0;i<d.length;i+=4){ const r=d[i],g=d[i+1],b=d[i+2]; if(d[i+3]>128 && !(r>235&&g>235&&b>235)) px.push([r,g,b]); }
-  if(!px.length){res(null);return;} px.sort((a,b)=>(a[0]+a[1]+a[2])-(b[0]+b[1]+b[2])); const m=px[Math.floor(px.length/2)];
-  res('#'+m.map(v=>v.toString(16).padStart(2,'0')).join('')); }; img.onerror=()=>res(null); img.src=src; });}
-function hexRgb(h){h=(h||'').replace('#','');return [parseInt(h.slice(0,2),16)||0,parseInt(h.slice(2,4),16)||0,parseInt(h.slice(4,6),16)||0];}
-function colorDist(a,b){const x=hexRgb(a),y=hexRgb(b);return Math.hypot(x[0]-y[0],x[1]-y[1],x[2]-y[2]);}
+const blobToDataURL = b => new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(b); });
 
+/* --------------------------------------------------------- lookbook (IndexedDB) */
+const DB='vesta', STORE='looks';
+function idb(){ return new Promise((res,rej)=>{ const r=indexedDB.open(DB,1);
+  r.onupgradeneeded=()=>{ if(!r.result.objectStoreNames.contains(STORE)) r.result.createObjectStore(STORE,{keyPath:'id'}); };
+  r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+async function looksAll(){ try{ const db=await idb(); return await new Promise((res,rej)=>{
+  const rq=db.transaction(STORE).objectStore(STORE).getAll(); rq.onsuccess=()=>res(rq.result||[]); rq.onerror=()=>rej(rq.error); });
+  }catch(e){ return []; } }
+async function lookPut(o){ try{ const db=await idb(); return await new Promise((res,rej)=>{
+  const rq=db.transaction(STORE,'readwrite').objectStore(STORE).put(o); rq.onsuccess=()=>res(true); rq.onerror=()=>rej(rq.error); });
+  }catch(e){ return false; } }
+async function lookDel(id){ try{ const db=await idb(); return await new Promise((res)=>{
+  const rq=db.transaction(STORE,'readwrite').objectStore(STORE).delete(id); rq.onsuccess=()=>res(true); rq.onerror=()=>res(false); });
+  }catch(e){ return false; } }
+
+/* ---------------------------------------------------------------- app */
 function App(){
-  const [person,setPerson]=useState(()=>localStorage.getItem(LS.person)||null);
-  const [uploads,setUploads]=useState(()=>{try{return JSON.parse(localStorage.getItem(LS.uploads)||'[]')}catch(e){return[]}});
-  const [samples,setSamples]=useState([]);
-  const [analysis,setAnalysis]=useState(()=>{try{return JSON.parse(localStorage.getItem(LS.analysis)||'null')}catch(e){return null}});
-  const [view,setView]=useState('home');
+  const [view,setView]=useState(()=>(location.hash.replace('#/','')||'guardaroba').split('/')[0]);
+  const [wardrobe,setWardrobe]=useState([]);
+  const [demoKit,setDemoKit]=useState([]);
+  const [showDemo,setShowDemo]=useState(()=>ls.get(LS.demo,true));
+  const [loading,setLoading]=useState(true);
   const [filter,setFilter]=useState('all');
-  const [selected,setSelected]=useState(null);
-  const [cache,setCache]=useState({});
-  const [loading,setLoading]=useState(false);
-  const [elapsed,setElapsed]=useState(0);
-  const [busy,setBusy]=useState(null);
-  const [mode,setMode]=useState(()=>localStorage.getItem(LS.mode)||'local');
-  const [quality,setQuality]=useState('fast');
-  const [showOriginal,setShowOriginal]=useState(false);
-  const [device,setDevice]=useState('...');
-  const [notice,setNotice]=useState(null);
-  const [error,setError]=useState(null);
-  const [cameraOn,setCameraOn]=useState(false);
-  const [shot,setShot]=useState(null);
-  const [camErr,setCamErr]=useState(null);
-  const timer=useRef(null), videoRef=useRef(null), streamRef=useRef(null);
-
-  useEffect(()=>{ fetch(API+'/garments.json').then(r=>r.json()).then(setSamples).catch(()=>{}); },[]);
-  useEffect(()=>{ fetch(API+'/health').then(r=>r.ok?r.json():Promise.reject()).then(j=>setDevice(j.device)).catch(()=>setDevice('offline')); },[]);
-  useEffect(()=>{ try{ localStorage.setItem(LS.uploads,JSON.stringify(uploads)); }catch(e){ flash('Guardaroba pieno: spazio browser esaurito'); } },[uploads]);
-  useEffect(()=>{ if(analysis) localStorage.setItem(LS.analysis,JSON.stringify(analysis)); },[analysis]);
-  useEffect(()=>{ localStorage.setItem(LS.mode,mode); },[mode]);
+  const [sheet,setSheet]=useState(null);
+  const [person,setPerson]=useState(()=>localStorage.getItem(LS.person)||null);
+  const [analysis,setAnalysis]=useState(()=>ls.get(LS.analysis,null));
+  const [mode,setMode]=useState(()=>ls.get(LS.mode,'local'));
+  const [quality,setQuality]=useState(()=>ls.get(LS.quality,'fast'));
+  const [theme,setTheme]=useState(()=>ls.get(LS.theme,'auto'));
   const [premium,setPremium]=useState({openai:false,gemini:false});
-  const [keyDraft,setKeyDraft]=useState({});
-  useEffect(()=>{ fetch(API+'/settings').then(r=>r.json()).then(j=>setPremium(j.premium||{})).catch(()=>{}); },[]);
-  async function saveProviderKey(p){
-    const fd=new FormData(); fd.append('provider',p); fd.append('key',(keyDraft[p]||'').trim());
-    try{
-      const r=await fetch(API+'/settings',{method:'POST',body:fd});
-      if(!r.ok) throw new Error();
-      const j=await r.json(); setPremium(j.premium||{});
-      flash((keyDraft[p]||'').trim()?('Chiave '+p+' salvata'):('Chiave '+p+' rimossa'));
-      setKeyDraft(d=>({...d,[p]:''}));
-    }catch(e){ flash('Errore nel salvataggio della chiave'); }
-  }
-  useEffect(()=>{ if(person && !analysis) runAnalysis(person); },[]);
-  useEffect(()=>{ if(!cameraOn){ if(streamRef.current){streamRef.current.getTracks().forEach(t=>t.stop());streamRef.current=null;} return; }
-    setCamErr(null);
-    navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:720}},audio:false})
-      .then(s=>{ streamRef.current=s; if(videoRef.current) videoRef.current.srcObject=s; })
-      .catch(e=>setCamErr('Webcam non disponibile ('+e.name+'). Da iPhone via http la fotocamera web è bloccata: usa "Carica foto" o l\'app iOS.'));
-  },[cameraOn]);
+  const [health,setHealth]=useState(null);
+  const [slots,setSlots]=useState({});
+  const [locks,setLocks]=useState({});
+  const [render_,setRender]=useState(null);
+  const [job,setJob]=useState(null);
+  const [gen,setGen]=useState(null);
+  const [snack,setSnack]=useState(null);
+  const [looks,setLooks]=useState([]);
+  const [busy,setBusy]=useState(null);
+  const [anchors,setAnchors]=useState(()=>ls.get('vesta.anchors',null));
+  const abort=useRef(null);
 
-  function flash(msg){ setNotice(msg); setTimeout(()=>setNotice(null),4500); }
-  const garments=[...samples,...uploads];
-  const visible = filter==='all' ? garments : garments.filter(g=>(g.category||'upper')===filter);
-  const _doy=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/86400000);
-  const todayPick=samples.length?samples[_doy%samples.length]:null;
-  const palette=(analysis&&analysis.palette_main)||FALLBACK_PALETTE;
-  const matchScore=(hex)=> (analysis&&analysis.palette&&hex)?Math.min(...analysis.palette.map(p=>colorDist(hex,p))):999;
-  const currentRender=selected&&cache[selected];
-  const heroSrc=(!showOriginal&&currentRender)?currentRender:person;
-
-  async function runAnalysis(src){
-    try{ const blob=await (await fetch(src)).blob(); const fd=new FormData(); fd.append('person',blob,'me.jpg');
-      const r=await fetch(API+'/analyze',{method:'POST',body:fd}); if(r.ok){ const j=await r.json(); if(!j.error) setAnalysis(j); } }catch(e){}
-  }
-  async function setPersonFrom(src){
-    setView('home'); setSelected(null); setCache({}); setError(null);
-    setPerson(src); try{localStorage.setItem(LS.person,src);}catch(e){}
-    setBusy('Preparo la tua foto…');
-    try{ const blob=await (await fetch(src)).blob(); const fd=new FormData(); fd.append('image',blob,'me.jpg');
+  useEffect(()=>{ const on=()=>{ const v=(location.hash.replace('#/','')||'guardaroba').split('/')[0];
+      withTransition(()=>setView(v)); };
+    addEventListener('hashchange',on); return ()=>removeEventListener('hashchange',on); },[]);
+  useEffect(()=>{ document.documentElement.dataset.theme = theme==='auto'?'':theme; ls.set(LS.theme,theme); },[theme]);
+  useEffect(()=>{ ls.set(LS.mode,mode); },[mode]);
+  useEffect(()=>{ ls.set(LS.quality,quality); },[quality]);
+  useEffect(()=>{ if(analysis) ls.set(LS.analysis,analysis); },[analysis]);
+  useEffect(()=>{ loadAll(); looksAll().then(setLooks); },[]);
+  useEffect(()=>{ if(person && !analysis) analyze(person); },[]);
+  useEffect(()=>{ if(person && !anchors) measureAnchors(person); },[person]);
+  // le foto salvate prima avevano il fondo bianco: le riscontorno una volta sola
+  useEffect(()=>{ (async()=>{
+    if(!person || ls.get('vesta.personAlpha',false)) return;
+    try{ const b=await (await fetch(person)).blob();
+      const fd=new FormData(); fd.append('image',b,'me.jpg'); fd.append('alpha','1');
       const r=await fetch(API+'/cutout',{method:'POST',body:fd});
-      if(r.ok){ const clean=await blobToDataURL(await r.blob()); setPerson(clean); try{localStorage.setItem(LS.person,clean);}catch(e){} src=clean; } }catch(e){}
-    setBusy(null); setAnalysis(null); runAnalysis(src);
-  }
-  async function pickPerson(e){ const f=e.target.files&&e.target.files[0]; if(!f)return; const d=await downscale(f,1024); setPersonFrom(d); }
-  function useSample(){ setPersonFrom(API+'/person_sample.jpg'); }
-  function clearPerson(){ localStorage.removeItem(LS.person); localStorage.removeItem(LS.analysis); setPerson(null); setAnalysis(null); setSelected(null); setCache({}); }
+      if(r.ok){ const u=await blobToDataURL(await r.blob());
+        setPerson(u); try{ localStorage.setItem(LS.person,u); }catch(e){}
+        ls.set('vesta.personAlpha',true); setAnchors(null); measureAnchors(u); }
+    }catch(e){}
+  })(); },[]);
 
-  async function generate(g){
-    if(!person){ flash('Carica prima una tua foto'); return; }
-    setError(null); setShowOriginal(false); setView('home');
-    if(cache[g.id]){ setSelected(g.id); return; }
-    if(loading){ flash('Attendi: sto già creando un look'); return; }
-    if(mode==='premium' && !premium.openai && !premium.gemini){ setView('profilo'); flash('Premium: aggiungi una API key in Modelli premium'); return; }
-    setSelected(g.id); setLoading(true); setElapsed(0);
-    timer.current=setInterval(()=>setElapsed(e=>e+1),1000);
+  const flash=(t,action)=>{ setSnack({t,action}); setTimeout(()=>setSnack(s=>s&&s.t===t?null:s),6000); };
+  const go=(v)=>{ location.hash='#/'+v; setView(v); };
+
+  async function loadAll(){
+    setLoading(true);
     try{
-      const clothSrc=g.dataURL||(API+'/'+g.file);
-      const [pb,cb]=await Promise.all([fetch(person).then(r=>r.blob()),fetch(clothSrc).then(r=>r.blob())]);
-      const fd=new FormData(); fd.append('person',pb,'person.jpg'); fd.append('cloth',cb,'cloth.jpg');
-      fd.append('category',g.category||'upper'); fd.append('quality',quality); fd.append('mode',mode);
-      const res=await fetch(API+'/tryon',{method:'POST',body:fd});
-      if(!res.ok){ let m='HTTP '+res.status; try{ const j=await res.json(); if(j.error) m=j.error; }catch(e){} throw new Error(m); }
-      if((res.headers.get('X-Mode')||'')==='local-fallback') flash('Cloud non disponibile (quota) — generato in locale.');
-      const url=URL.createObjectURL(await res.blob()); setCache(c=>({...c,[g.id]:url}));
-    }catch(err){ setError('Generazione non riuscita: '+err.message+'. Il backend è avviato?'); setSelected(null); }
-    finally{ setLoading(false); clearInterval(timer.current); }
+      const [w,d,s,hp] = await Promise.all([
+        fetch(API+'/api/wardrobe').then(r=>r.json()).catch(()=>({items:[]})),
+        fetch(API+'/garments.json').then(r=>r.json()).catch(()=>[]),
+        fetch(API+'/settings').then(r=>r.json()).catch(()=>({premium:{}})),
+        fetch(API+'/health').then(r=>r.ok?r.json():null).catch(()=>null),
+      ]);
+      setWardrobe(w.items||[]); setDemoKit((d||[]).map(x=>({...x,demo:true})));
+      setPremium(s.premium||{}); setHealth(hp);
+    } finally { setLoading(false); }
   }
-  function shuffle(){ if(!garments.length)return; generate(garments[Math.floor(Math.random()*garments.length)]); }
+  async function analyze(s){
+    try{ const b=await (await fetch(s)).blob(); const fd=new FormData(); fd.append('person',b,'me.jpg');
+      const r=await fetch(API+'/analyze',{method:'POST',body:fd});
+      if(r.ok){ const j=await r.json(); if(!j.error){ setAnalysis(j);
+        if(j.palette_main&&j.palette_main[0]) document.documentElement.style.setProperty('--spot',j.palette_main[0]); } }
+    }catch(e){}
+  }
+  async function measureAnchors(s){
+    try{ const b=await (await fetch(s)).blob(); const fd=new FormData(); fd.append('person',b,'me.jpg');
+      const r=await fetch(API+'/api/anchors',{method:'POST',body:fd});
+      if(r.ok){ const j=await r.json(); if(j.anchors&&Object.keys(j.anchors).length){ setAnchors(j.anchors); ls.set('vesta.anchors',j.anchors); } }
+    }catch(e){}
+  }
+  async function setPersonFromBlob(blob){
+    setBusy('Preparo la tua foto');
+    let url=await blobToDataURL(blob);
+    try{ const fd=new FormData(); fd.append('image',blob,'me.jpg'); fd.append('alpha','1');
+      const r=await fetch(API+'/cutout',{method:'POST',body:fd});
+      if(r.ok) url=await blobToDataURL(await r.blob());
+    }catch(e){}
+    setPerson(url); try{ localStorage.setItem(LS.person,url); }catch(e){ flash('Foto troppo grande per la memoria del browser'); }
+    setBusy(null); setRender(null); setAnalysis(null); setAnchors(null); ls.set('vesta.anchors',null);
+    analyze(url); measureAnchors(url); go('specchio');
+  }
 
-  async function addGarment(e){
-    const f=e.target.files&&e.target.files[0]; if(!f)return;
-    const id='up_'+Date.now(); const d=await downscale(f,1024);
-    setUploads(u=>[...u,{id,label:'Nuovo capo',category:'upper',dataURL:d}]); setView('guardaroba');
-    flash('Scontorno e catalogho il capo…');
+  const items = showDemo ? [...wardrobe, ...demoKit] : wardrobe;
+  const counts = items.reduce((a,i)=>{ a[i.category]=(a[i.category]||0)+1; return a; },{});
+  const visible = filter==='all' ? items : items.filter(i=>i.category===filter);
+  const filled = Object.entries(slots).filter(([k,v])=>v);
+
+  /* ----------------------------------------------------- import */
+  async function startImport(files){
+    const list=[...files].slice(0,12);
+    if(!list.length) return;
+    setSheet(null);
+    setJob({status:'running',photos:list.length,done:0,found:[],message:'Preparo le foto…',ids:[]});
+    const fd=new FormData();
+    for(const f of list) fd.append('photos', await downscale(f,1600), (f.name||'foto')+'.jpg');
+    fd.append('provider','');
     try{
-      const blob=await (await fetch(d)).blob();
-      const cutFd=new FormData(); cutFd.append('image',blob,'capo.jpg');
-      const clsFd=new FormData(); clsFd.append('image',blob,'capo.jpg');
-      const [cutR,clsR]=await Promise.all([ fetch(API+'/cutout',{method:'POST',body:cutFd}), fetch(API+'/classify',{method:'POST',body:clsFd}) ]);
-      let clean=d; if(cutR.ok) clean=await blobToDataURL(await cutR.blob());
-      const cat=clsR.ok?((await clsR.json()).category||'upper'):'upper';
-      const color=await dominantColor(clean);
-      setUploads(u=>u.map(x=>x.id===id?{...x,dataURL:clean,category:cat,color,label:CATLABEL[cat]||'Capo'}:x));
-      flash('Capo aggiunto al guardaroba ('+(CATLABEL[cat]||'capo')+')');
-    }catch(err){ flash('Capo aggiunto (senza scontorno)'); }
+      const r=await fetch(API+'/api/import',{method:'POST',body:fd});
+      if(!r.ok) throw new Error((await r.json().catch(()=>({}))).error||('HTTP '+r.status));
+      const {job_id,premium:isPrem}=await r.json();
+      if(!isPrem) flash('Senza chiave premium uso lo scontorno semplice: qualità inferiore.');
+      poll(job_id);
+    }catch(e){ setJob(j=>({...(j||{}),status:'error',message:'Import non riuscito: '+e.message})); }
+  }
+  function poll(jobId){
+    const seen=new Set();
+    const tick=async()=>{
+      try{
+        const j=await fetch(API+`/api/jobs/${jobId}`).then(r=>r.json());
+        const found=[]; let msg=j.message;
+        for(const ev of (j.events||[])){
+          if(ev.stage==='saved'&&ev.item&&!seen.has(ev.item.id)){ seen.add(ev.item.id); found.push(ev.item); }
+        }
+        setJob(prev=>({...(prev||{}),status:j.status,message:msg,
+          found:[...((prev&&prev.found)||[]),...found]}));
+        if(j.status==='done'||j.status==='error'){
+          const w=await fetch(API+'/api/wardrobe').then(r=>r.json()).catch(()=>({items:[]}));
+          setWardrobe(w.items||[]);
+          const ids=(j.items||[]).map(i=>i.id);
+          if(j.status==='done'&&ids.length){ ls.set(LS.review,ids); setSheet({kind:'revisione',ids}); }
+          else if(j.status==='error') flash(j.message||'Import non riuscito');
+          else flash('Nessun capo riconosciuto nelle foto.');
+          setJob(null);
+          return;
+        }
+      }catch(e){}
+      setTimeout(tick,900);
+    };
+    tick();
   }
 
-  function openCamera(){ setShot(null); setCameraOn(true); }
-  function closeCamera(){ setCameraOn(false); setShot(null); }
-  function captureFrame(){ const v=videoRef.current; if(!v||!v.videoWidth)return;
-    const max=900,s=Math.min(1,max/Math.max(v.videoWidth,v.videoHeight));
-    const w=Math.round(v.videoWidth*s),hh=Math.round(v.videoHeight*s);
-    const c=document.createElement('canvas');c.width=w;c.height=hh;c.getContext('2d').drawImage(v,0,0,w,hh);
-    setShot(c.toDataURL('image/jpeg',0.92)); }
-  function useShot(){ if(!shot)return; const s=shot; closeCamera(); setPersonFrom(s); }
+  /* ----------------------------------------------------- sviluppo L2 */
+  function estimate(){ const t=ls.get(LS.timing,{}); const k=mode+'|'+quality;
+    const arr=t[k]||[]; if(arr.length) return Math.round(arr.slice(-5).reduce((a,b)=>a+b,0)/Math.min(arr.length,5));
+    return DEFAULT_T[k]||DEFAULT_T[mode+'|fast']||60; }
+  function noteTiming(sec){ const t=ls.get(LS.timing,{}); const k=mode+'|'+quality;
+    t[k]=[...(t[k]||[]),sec].slice(-5); ls.set(LS.timing,t); }
 
-  // ---------- render ----------
-  const cameraOverlay = cameraOn ? html`
-    <div class="cam">
-      ${!shot ? html`
-        <video ref=${videoRef} class="cam-v" autoplay playsinline muted></video>
-        ${camErr?html`<div class="cam-err">${camErr}</div>`:null}
-        <div class="cam-bar">
-          <button class="btn" onClick=${closeCamera}>Annulla</button>
-          <button class="btn primary" onClick=${captureFrame} disabled=${!!camErr}><i class="ti ti-camera"></i> Scatta</button>
-        </div>` : html`
-        <img class="cam-v" src=${shot} />
-        <div class="cam-bar">
-          <button class="btn" onClick=${()=>setShot(null)}>Riscatta</button>
-          <button class="btn primary" onClick=${useShot}>Usa questa foto</button>
-        </div>`}
-    </div>` : null;
-
-  if(!person){
-    return html`
-      ${cameraOverlay}
-      <div class="onb">
-        <div><h1>Vediamo come ti sta.</h1><p>Carica o scatta una foto a figura intera. Resta sul tuo Mac: niente esce dal dispositivo.</p></div>
-        <label class="drop"><i class="ti ti-photo-up"></i><span class="d1">Carica una foto</span><span class="d2">JPG o PNG · figura intera</span>
-          <input class="hidden-file" type="file" accept="image/*" onChange=${pickPerson} /></label>
-        <button class="btn" onClick=${openCamera}><i class="ti ti-camera"></i> Scatta con la webcam</button>
-        <button class="btn" onClick=${useSample}>Usa una foto di esempio</button>
-      </div>`;
+  async function develop(){
+    if(!person){ flash('Serve prima una tua foto'); go('profilo'); return; }
+    const order=['overall','outerwear','upper','lower','shoes'];
+    const steps=order.map(k=>slots[k]).filter(Boolean);
+    if(!steps.length){ flash('Scegli almeno un capo'); return; }
+    if(mode==='premium'&&!premium.openai&&!premium.gemini){ flash('Premium: aggiungi una chiave API'); go('profilo'); return; }
+    abort.current=new AbortController();
+    const est=estimate()*steps.length;
+    setGen({step:0,total:steps.length,sec:0,est});
+    const t0=Date.now();
+    const timer=setInterval(()=>setGen(g=>g&&({...g,sec:Math.round((Date.now()-t0)/1000)})),1000);
+    let base=person;
+    try{
+      for(let i=0;i<steps.length;i++){
+        const it=steps[i];
+        setGen(g=>g&&({...g,step:i+1,label:it.label}));
+        const [pb,cb]=await Promise.all([fetch(base).then(r=>r.blob()),fetch(src(it)).then(r=>r.blob())]);
+        const fd=new FormData();
+        fd.append('person',pb,'p.jpg'); fd.append('cloth',cb,'c.png');
+        fd.append('category',it.category==='outerwear'?'upper':it.category);
+        fd.append('quality',quality); fd.append('mode',mode);
+        if(!it.demo) fd.append('garment_id',it.id);
+        const r=await fetch(API+'/tryon',{method:'POST',body:fd,signal:abort.current.signal});
+        if(!r.ok){ let m='HTTP '+r.status; try{ const j=await r.json(); if(j.error) m=j.error; }catch(e){} throw new Error(m); }
+        if((r.headers.get('X-Mode')||'')==='local-fallback') flash('Il cloud non ha risposto, ho usato il motore locale.');
+        const sec=parseFloat(r.headers.get('X-Inference-Seconds')||'0');
+        if(sec) noteTiming(sec);
+        base=URL.createObjectURL(await r.blob());
+      }
+      setRender(base);
+    }catch(e){
+      if(e.name!=='AbortError') flash('Generazione non riuscita: '+e.message);
+    } finally { clearInterval(timer); setGen(null); }
+  }
+  async function saveLook(){
+    if(!render_) return;
+    const blob=await (await fetch(render_)).blob();
+    const look={id:'lk_'+Date.now(),blob,created:Date.now(),mode,
+      items:filled.map(([k,v])=>({id:v.id,label:v.label,file:v.file,dataURL:v.dataURL||null}))};
+    await lookPut(look); setLooks(await looksAll()); flash('Look salvato nel lookbook');
+  }
+  function ricombina(){
+    const next={...slots};
+    for(const [k] of SLOTS){ if(locks[k]) continue;
+      const pool=items.filter(i=>i.category===k&&!i.demo).concat(items.filter(i=>i.category===k));
+      if(pool.length) next[k]=pool[Math.floor(Math.random()*pool.length)];
+    }
+    if(next.overall){ next.upper=null; next.lower=null; }
+    setSlots(next); setRender(null);
   }
 
-  const heroBlock = html`
-    <div class="hero">
-      ${heroSrc?html`<img src=${heroSrc} alt="tu" />`:null}
-      <div class="badge">${(!showOriginal&&currentRender)?'Look generato':'Tu'}</div>
-      ${currentRender?html`<button class="compare" onMouseDown=${()=>setShowOriginal(true)} onMouseUp=${()=>setShowOriginal(false)} onMouseLeave=${()=>setShowOriginal(false)} onTouchStart=${()=>setShowOriginal(true)} onTouchEnd=${()=>setShowOriginal(false)}><i class="ti ti-eye"></i> originale</button>`:null}
-      ${busy?html`<div class="ov"><div class="bar"><i></i></div><div class="t1">${busy}</div></div>`:null}
-      ${loading?html`<div class="ov">${selected?html`<img src=${(garments.find(x=>x.id===selected)||{}).dataURL||(API+'/'+(garments.find(x=>x.id===selected)||{}).file)} />`:null}<div class="t1">Sto creando il tuo look…</div><div class="bar"><i></i></div><div class="t2">${elapsed}s · ${mode==='cloud'?'cloud':mode==='premium'?'premium':('locale '+quality)}</div></div>`:null}
+  /* ----------------------------------------------------- viste */
+  const Plate = (it) => html`
+    <button class="plate" onClick=${()=>setSheet({kind:'capo',id:it.id})}
+      aria-label=${`${it.label}. Apri la scheda`}>
+      <div class="art">
+        <img src=${src(it)} alt="" loading="lazy" />
+        ${it.demo?html`<span class="badge">esempio</span>`:null}
+        ${it.qa&&it.qa.ok===false?html`<span class="badge warn">da rivedere</span>`:null}
+      </div>
+      <div class="nome">${it.label}</div>
+      <div class="riga"><span class="sw" style=${`background:${it.color||'#ccc'}`}></span>
+        <span class="meta">${[it.color_name,CATNAME[it.category]].filter(Boolean).join(' · ')}</span></div>
+    </button>`;
+
+  const viewGuardaroba = html`
+    <div class="page">
+      <h1 class="title">Guardaroba</h1>
+      <div class="meta">${items.length} capi${wardrobe.length?` · ${wardrobe.length} tuoi`:''}${showDemo&&demoKit.length?` · ${demoKit.length} di prova`:''}</div>
+      <div class="rubriche">
+        <button class="chip" aria-pressed=${filter==='all'} onClick=${()=>setFilter('all')}>Tutti<span class="n">${items.length}</span></button>
+        ${CATS.filter(([k])=>counts[k]).map(([k,l])=>html`
+          <button class="chip" aria-pressed=${filter===k} onClick=${()=>setFilter(k)}>${l}<span class="n">${counts[k]}</span></button>`)}
+      </div>
+      ${loading?html`<div class="grid">${[1,2,3,4].map(()=>html`<div class="skel" style="aspect-ratio:4/5"></div>`)}</div>`
+        : visible.length?html`<div class="grid">${visible.map(Plate)}</div>`
+        : html`<div class="empty"><p>Il guardaroba è vuoto.</p>
+            <button class="btn primary" onClick=${()=>setSheet({kind:'importa'})}>Importa le prime foto</button></div>`}
+      ${demoKit.length?html`<hr class="hr"/><div class="rowb" style="border:0">
+        <div><div class="meta">Numero di prova</div>
+          <div class="cap">${demoKit.length} capi dimostrativi, per capire come funziona</div></div>
+        <button class="btn small" onClick=${()=>{ setShowDemo(!showDemo); ls.set(LS.demo,!showDemo); }}>
+          ${showDemo?'Nascondi':'Mostra'}</button></div>`:null}
     </div>`;
 
-  const invSlot=(g)=>html`<div class=${'slot'+(selected===g.id?' on':'')} onClick=${()=>generate(g)}>
-      <div class="box"><img src=${g.dataURL||(API+'/'+g.file)} />
-        ${g.color?html`<span class="cdot" style=${'background:'+g.color}></span>`:null}
-        ${matchScore(g.color)<95?html`<span class="star"><i class="ti ti-star"></i></span>`:null}
-        ${cache[g.id]?html`<span class="done"></span>`:null}</div>
-      <div class="cap">${g.label}</div></div>`;
-
-  const filtersBar = html`<div class="filters">${FILTERS.map(([k,l])=>html`<button class=${'fchip'+(filter===k?' on':'')} onClick=${()=>setFilter(k)}>${l}</button>`)}</div>`;
-
-  const home = html`
-    <div class="content" key="home">
-      <div class="top"><div><div class="hello">Ciao</div><div class="sub">${todayLabel()}</div></div>
-        <div class="chip"><span class=${'dot '+(device==='offline'?'off':(device==='...'?'':'ok'))}></span>${device==='offline'?'offline':weatherSeason()}</div></div>
-      <div class="home2">
-        <div>${heroBlock}</div>
+  // tre proposte, con il motivo: completare il look, vicinanza alla palette, mai provato
+  const proposte = (()=>{
+    const pal=(analysis&&analysis.palette)||[];
+    const near=(it)=> it.color&&pal.length ? Math.min(...pal.map(c=>dist(c,it.color))) : 999;
+    const out=[]; const used=new Set(Object.values(slots).filter(Boolean).map(i=>i.id));
+    const free=['upper','lower','overall','shoes'].find(k=>!slots[k]&&!(k==='overall'&&(slots.upper||slots.lower))
+      &&!((k==='upper'||k==='lower')&&slots.overall));
+    const pool=items.filter(i=>!used.has(i.id));
+    if(free){ const c=pool.filter(i=>i.category===free).sort((a,b)=>near(a)-near(b))[0];
+      if(c) out.push([c,'completa il look']); }
+    const byPal=pool.filter(i=>!out.some(o=>o[0].id===i.id)).sort((a,b)=>near(a)-near(b))[0];
+    if(byPal&&near(byPal)<200) out.push([byPal,'vicino alla tua palette']);
+    const rest=pool.filter(i=>!out.some(o=>o[0].id===i.id));
+    const fresh=rest[Math.floor(Math.random()*rest.length)] || rest[0];
+    if(fresh) out.push([fresh,'da scoprire']);
+    return out.slice(0,3);
+  })();
+  const est=estimate(), steps=['overall','outerwear','upper','lower','shoes'].filter(k=>slots[k]).length;
+  const privacy = mode==='local'?'la foto resta sul Mac':mode==='cloud'?'la foto esce dal Mac':'la foto va al provider';
+  const viewSpecchio = html`
+    <div class="page">
+      <div class="row" style="justify-content:space-between">
+        <h1 class="title">Specchio</h1>
+        <button class="chip" onClick=${()=>setSheet({kind:'motore'})} aria-label="Cambia motore">
+          ${mode==='local'?'LOCALE':mode==='cloud'?'CLOUD':'PREMIUM'} ▾</button>
+      </div>
+      <div class="two">
         <div>
-          <div class="palette"><span class="lab">Palette${analysis?' · '+analysis.season:''}</span>${palette.map(c=>html`<span class="sw" style=${'background:'+c}></span>`)}</div>
-          ${error?html`<div class="err">${error}</div>`:null}
-          <div class="row"><div class="seg">
-            <button class=${mode==='local'?'on':''} onClick=${()=>setMode('local')}><i class="ti ti-device-laptop"></i> Locale</button>
-            <button class=${mode==='cloud'?'on':''} onClick=${()=>setMode('cloud')}><i class="ti ti-bolt"></i> Cloud</button>
-            <button class=${mode==='premium'?'on':''} onClick=${()=>setMode('premium')}><i class="ti ti-sparkles"></i> Premium</button>
-          </div><button class="iconbtn" title="Look casuale" onClick=${shuffle}><i class="ti ti-arrows-shuffle"></i></button></div>
-          ${todayPick?html`<div class="today"><img src=${API+'/'+todayPick.file} />
-            <div style="flex:1;min-width:0"><div class="ti1">Look del giorno</div><div class="ti2">${todayPick.label}${analysis?' · '+analysis.season:''}</div></div>
-            <button class="pill" onClick=${()=>generate(todayPick)}>Indossa</button></div>`:null}
-          <div class="sectit" style="padding-bottom:4px">Inventario</div>
-          ${filtersBar}
-          <div class="inv">${visible.map(invSlot)}
-            <label class="slot"><div class="box"><i class="ti ti-plus ph"></i></div><div class="cap">Aggiungi</div><input class="hidden-file" type="file" accept="image/*" onChange=${addGarment} /></label></div>
+          <div class="stage">
+            <div class="spot"></div>
+            ${render_?html`<img class="base developing" key=${render_} src=${render_} alt="Il tuo look" />`
+              : person?html`<img class="base" src=${person} alt="La tua foto" />`
+              : html`<div style="text-align:center;padding:var(--s5)">
+                  <svg viewBox="0 0 100 200" width="120" height="240" aria-hidden="true" style="opacity:.25">
+                    <circle cx="50" cy="26" r="18" fill="currentColor"/>
+                    <path d="M28 50h44l8 60H20zM30 110h16l-4 78H26zM54 110h16l4 78H58z" fill="currentColor"/></svg>
+                  <p class="cap">Aggiungi una tua foto per vedere i capi addosso.</p>
+                  <button class="btn primary" onClick=${()=>setSheet({kind:'persona'})}>Aggiungi la mia foto</button>
+                </div>`}
+            ${!render_&&person?filled.map(([k,it])=>{ const A=anchors||{};
+              const base=ANCHORS[it.category]||ANCHORS.upper;
+              const m=A[it.category]; const a=m?[m[0],m[1],m[2],m[3],base[4]]:base;
+              return html`<img class="layer" src=${src(it)} alt=""
+                style=${`left:${a[0]*100}%;top:${a[1]*100}%;width:${(a[2]-a[0])*100}%;height:${(a[3]-a[1])*100}%;z-index:${a[4]}`} />`; }):null}
+            <span class="tag">${render_?'Look sviluppato':filled.length?'Montaggio':'Tu'}</span>
+            ${render_?html`<button class="btn small cmp" onClick=${()=>setRender(null)}>Originale</button>`:null}
+            ${gen?html`<div class="veil">
+                <div class="meta">${gen.total>1?`Passo ${gen.step} di ${gen.total}`:'Sviluppo'}</div>
+                <div style="font-family:var(--f-display);font-size:22px">${gen.label||'Il tuo look'}</div>
+                <div class="progress"><i style=${`width:${Math.min(97,Math.round(gen.sec/Math.max(gen.est,1)*100))}%`}></i></div>
+                <div class="meta">${gen.sec}s ${gen.sec>gen.est?'· più del previsto':`· circa ${gen.est}s`}</div>
+                <button class="btn small" onClick=${()=>abort.current&&abort.current.abort()}>Annulla</button>
+              </div>`:null}
+          </div>
+          <p class="cap" style="margin:var(--s2) 0">${render_?'Prova reale generata dal modello.':'Anteprima di composizione, non ancora una prova reale.'}</p>
+        </div>
+        <div>
+          <div class="slots">
+            ${SLOTS.map(([k,l])=>{ const it=slots[k]; const dis=(k==='upper'||k==='lower')&&slots.overall;
+              return html`<button class=${'slot'+(it?' full':'')+(locks[k]?' locked':'')} disabled=${!!dis}
+                onClick=${()=>setSheet({kind:'scegli',cat:k})}
+                aria-label=${it?`${l}: ${it.label}. Cambia`:`${l}: vuoto. Scegli un capo`}>
+                ${it?html`<img src=${src(it)} alt="" />`:html`<${Icon} n="piu" s=${18} />`}
+                <span class="k">${l}</span></button>`; })}
+          </div>
+          ${slots.overall?html`<p class="hint">Un abito intero occupa sopra e sotto.</p>`:null}
+          <div class="row" style="gap:var(--s2);margin:var(--s3) 0">
+            <button class="btn small" onClick=${ricombina}><${Icon} n="dado" s=${16} /> Ricombina</button>
+            ${filled.length?html`<button class="btn small" onClick=${()=>{setSlots({});setRender(null);}}>Svuota</button>`:null}
+          </div>
+          <button class="btn primary wide" disabled=${!!gen||!filled.length} onClick=${develop}>
+            ${gen?'Sto sviluppando…':'Sviluppa il look'}</button>
+          <div class="sub">${mode==='local'?'Locale':mode==='cloud'?'Cloud gratuito':'Premium'} ·
+            circa ${est*Math.max(steps,1)} s · ${privacy}</div>
+          ${proposte.length?html`
+            <div style="margin-top:var(--s6)">
+              <div class="meta">Da provare</div>
+              <div class="prop">
+                ${proposte.map(([it,why])=>html`
+                  <button class="propcard" onClick=${()=>{ const c=it.category==='accessory'?'upper':it.category;
+                      const s={...slots,[c]:it}; if(c==='overall'){s.upper=null;s.lower=null;} else if(c==='upper'||c==='lower') s.overall=null;
+                      setSlots(s); setRender(null); }}>
+                    <div class="art"><img src=${src(it)} alt="" loading="lazy" /></div>
+                    <div class="pl">${it.label}</div>
+                    <div class="meta" style="font-size:9px">${why}</div>
+                  </button>`)}
+              </div>
+            </div>`:null}
+          ${render_?html`<div class="row" style="gap:var(--s2);margin-top:var(--s4)">
+            <button class="btn small" onClick=${saveLook}>Salva nel lookbook</button>
+            <a class="btn small" href=${render_} download="vesta-look.png"><${Icon} n="scarica" s=${16} /> Esporta</a>
+            <button class="btn small" onClick=${develop}><${Icon} n="riprova" s=${16} /> Rigenera</button></div>`:null}
         </div>
       </div>
     </div>`;
 
-  const guardaroba = html`
-    <div class="content" key="guard">
-      <div class="sectit">Guardaroba</div>
-      ${filtersBar}
-      <div class="grid">
-        ${visible.map(g=>html`<div class=${'card'+(selected===g.id?' on':'')} onClick=${()=>generate(g)}>
-          <div class="box"><img src=${g.dataURL||(API+'/'+g.file)} />
-            ${g.color?html`<span class="cdot" style=${'background:'+g.color}></span>`:null}
-            ${matchScore(g.color)<95?html`<span class="star"><i class="ti ti-star"></i></span>`:null}
-            ${cache[g.id]?html`<span class="done"></span>`:null}</div>
-          <div class="cap">${g.label}</div></div>`)}
-        <label class="card"><div class="box"><i class="ti ti-plus ph"></i></div><div class="cap">Aggiungi</div><input class="hidden-file" type="file" accept="image/*" onChange=${addGarment} /></label>
-      </div>
+  const viewLookbook = html`
+    <div class="page">
+      <h1 class="title">Lookbook</h1>
+      <div class="meta">${looks.length} look salvati</div>
+      ${looks.length?html`<div class="grid" style="margin-top:var(--s4)">
+        ${looks.slice().reverse().map((lk,n)=>html`
+          <div class="plate">
+            <div class="art"><img src=${URL.createObjectURL(lk.blob)} alt="" /></div>
+            <div class="nome">Look ${looks.length-n}</div>
+            <div class="riga"><span class="meta">${new Date(lk.created).toLocaleDateString('it-IT')} · ${lk.mode}</span></div>
+            <div class="row" style="gap:6px;margin-top:6px">
+              <button class="btn small" onClick=${async()=>{ await lookDel(lk.id); setLooks(await looksAll()); }}>
+                <${Icon} n="cestino" s=${15} /></button>
+              <a class="btn small" href=${URL.createObjectURL(lk.blob)} download=${lk.id+'.png'}><${Icon} n="scarica" s=${15} /></a>
+            </div>
+          </div>`)}
+      </div>`:html`<div class="empty">Nessun look salvato. Componi un outfit nello Specchio e sviluppalo.</div>`}
     </div>`;
 
-  const suggested=[...garments].filter(g=>g.color).sort((a,b)=>matchScore(a.color)-matchScore(b.color)).slice(0,6);
-  const idee = html`
-    <div class="content" key="idee">
-      <div class="sectit">Idee</div>
-      ${analysis?html`
-        <div class="palette" style="padding-top:0"><span class="lab">Sei una</span><b style="font-size:15px">${analysis.season}</b></div>
-        <div class="palette">${(analysis.palette||palette).map(c=>html`<span class="sw" style=${'width:30px;height:30px;background:'+c}></span>`)}</div>
-        <div class="advice">${analysis.advice}</div>
-        <div class="advice hint">Sottotono ${analysis.undertone} · profondità ${analysis.depth} · contrasto ${analysis.contrast}</div>
-        <div class="sectit" style="font-size:16px">Consigliati per te</div>
-        <div class="grid">${suggested.map(g=>html`<div class="card" onClick=${()=>generate(g)}><div class="box"><img src=${g.dataURL||(API+'/'+g.file)} />${g.color?html`<span class="cdot" style=${'background:'+g.color}></span>`:null}<span class="star"><i class="ti ti-star"></i></span></div><div class="cap">${g.label}</div></div>`)}</div>
-      `:html`<div class="advice">Carica una foto per scoprire la tua palette e i capi consigliati.</div>`}
-    </div>`;
-
-  const profilo = html`
-    <div class="content" key="prof">
-      <div class="sectit">Profilo</div>
-      <div class="prow"><img class="pthumb" src=${person} /><div style="flex:1"><div class="ti1" style="font-weight:500">La tua foto modello</div><div class="ti2 muted" style="font-size:12px">${analysis?analysis.season+' · sottotono '+analysis.undertone:'analisi in corso…'}</div></div></div>
-      <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px">
-        <label class="btn"><i class="ti ti-photo-up"></i> Cambia foto (carica)<input class="hidden-file" type="file" accept="image/*" onChange=${pickPerson} /></label>
-        <button class="btn" onClick=${openCamera}><i class="ti ti-camera"></i> Cambia foto (webcam)</button>
-        <div class="seg" style="margin-top:4px">
-          <button class=${mode==='local'?'on':''} onClick=${()=>setMode('local')}><i class="ti ti-device-laptop"></i> Locale</button>
-          <button class=${mode==='cloud'?'on':''} onClick=${()=>setMode('cloud')}><i class="ti ti-bolt"></i> Cloud</button>
-          <button class=${mode==='premium'?'on':''} onClick=${()=>setMode('premium')}><i class="ti ti-sparkles"></i> Premium</button>
+  const viewProfilo = html`
+    <div class="page">
+      <h1 class="title">Profilo</h1>
+      <div class="meta">La mia foto</div>
+      <div class="row" style="margin:var(--s3) 0">
+        ${person?html`<img src=${person} alt="" style="width:76px;height:96px;object-fit:cover;border:1px solid var(--rule);border-radius:var(--r-plate)" />`:null}
+        <div style="flex:1">
+          <div class="cap">${analysis?`${analysis.season} · sottotono ${analysis.undertone}`:'Nessuna analisi'}</div>
+          ${analysis?html`<div class="row" style="gap:5px;margin-top:6px">
+            ${(analysis.palette_main||[]).map(c=>html`<span class="sw" style=${`background:${c};width:14px;height:14px`}></span>`)}</div>`:null}
         </div>
-        <div class="advice hint">Locale: sul tuo Mac (~90s, privato). Cloud: GPU gratuita (~25s, quota limitata). Premium: modello a pagamento di qualità massima (~20-60s), serve una API key qui sotto.</div>
-        <div class="sectit" style="font-size:16px;padding:6px 0 2px">Modelli premium</div>
-        <div class="advice hint" style="padding:0 0 4px">Incolla la tua API key (OpenAI o Google Gemini). Resta sul server locale, mai nel repository. Salva vuoto per rimuoverla.</div>
-        ${['openai','gemini'].map(p=>html`
-        <div style="display:flex;gap:8px;align-items:center">
-          <span class=${'dot '+(premium[p]?'ok':'')} style="flex:0 0 auto"></span>
-          <span style="width:56px;font-size:13px;text-transform:capitalize;flex:0 0 auto">${p}</span>
-          <input type="password" autocomplete="off" placeholder=${premium[p]?'configurata':(p==='openai'?'sk-…':'AIza…')}
-            style="flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 10px;color:var(--text);font-size:12.5px"
-            value=${keyDraft[p]||''} onInput=${e=>{const v=e.target.value; setKeyDraft(d=>({...d,[p]:v}));}} />
-          <button class="btn" style="padding:9px 12px;flex:0 0 auto" onClick=${()=>saveProviderKey(p)}>Salva</button>
-        </div>`)}
-        <button class="btn" onClick=${clearPerson}><i class="ti ti-trash"></i> Reimposta foto</button>
       </div>
+      <div class="row" style="gap:var(--s2);flex-wrap:wrap">
+        <button class="btn small" onClick=${()=>setSheet({kind:'persona'})}>${person?'Sostituisci':'Aggiungi'} la foto</button>
+        ${person?html`<button class="btn small" onClick=${()=>analyze(person)}>Rianalizza i colori</button>`:null}
+        ${person?html`<button class="btn small" onClick=${()=>{localStorage.removeItem(LS.person);setPerson(null);setRender(null);}}>Rimuovi</button>`:null}
+      </div>
+
+      <hr class="hr" />
+      <div class="meta">Motore</div>
+      <div class="seg" style="margin:var(--s3) 0">
+        ${[['local','Locale'],['cloud','Cloud'],['premium','Premium']].map(([k,l])=>html`
+          <button aria-pressed=${mode===k} onClick=${()=>setMode(k)}>${l}</button>`)}
+      </div>
+      <p class="hint">${mode==='local'?'Gira sul tuo Mac, la foto non esce dal computer. Circa 80 s.'
+        :mode==='cloud'?'GPU gratuita di Hugging Face, quota limitata. La foto esce dal Mac. Circa 40 s.'
+        :'Modelli a pagamento, qualità massima. Serve una chiave API. Circa 15 s.'}</p>
+      ${mode==='local'?html`<div class="seg" style="margin:var(--s3) 0">
+        ${[['fast','veloce'],['balanced','media'],['high','alta']].map(([k,l])=>html`
+          <button aria-pressed=${quality===k} onClick=${()=>setQuality(k)}>${l}</button>`)}</div>`:null}
+
+      <hr class="hr" />
+      <div class="meta">Chiavi API</div>
+      <p class="hint">La chiave resta sul Mac, il browser non la vede mai.</p>
+      ${['openai','gemini'].map(p=>html`<${KeyRow} p=${p} on=${premium[p]} onSaved=${(pr)=>setPremium(pr)} flash=${flash} />`)}
+
+      <hr class="hr" />
+      <div class="meta">Tema</div>
+      <div class="seg" style="margin:var(--s3) 0">
+        ${[['auto','Automatico'],['light','Chiaro'],['dark','Scuro']].map(([k,l])=>html`
+          <button aria-pressed=${theme===k} onClick=${()=>setTheme(k)}>${l}</button>`)}
+      </div>
+      <hr class="hr" />
+      <div class="meta">Stato</div>
+      <p class="hint">${health?`Server attivo · ${health.device}`:'Server non raggiungibile'} · ${wardrobe.length} capi tuoi · ${looks.length} look</p>
     </div>`;
 
-  const NAV=[['home','Home','ti-home'],['guardaroba','Guardaroba','ti-hanger'],['__add','','ti-camera'],['idee','Idee','ti-bulb'],['profilo','Profilo','ti-user']];
+  const body = view==='specchio'?viewSpecchio : view==='lookbook'?viewLookbook
+             : view==='profilo'?viewProfilo : viewGuardaroba;
+
   return html`
-    ${cameraOverlay}
-    ${notice?html`<div class="notice">${notice}</div>`:null}
     <div class="app">
-      ${view==='home'?home:view==='guardaroba'?guardaroba:view==='idee'?idee:profilo}
-      <nav>${NAV.map(([k,l,ic])=> k==='__add'
-        ? html`<label class="scan"><i class="ti ti-camera"></i><input class="hidden-file" type="file" accept="image/*" onChange=${addGarment} /></label>`
-        : html`<button class=${'it'+(view===k?' on':'')} onClick=${()=>setView(k)}><i class=${'ti '+ic}></i>${l}</button>`)}
+      ${body}
+      <nav>
+        <span class="wordmark" aria-hidden="true">Vesta</span>
+        <a href="#/guardaroba" aria-current=${view==='guardaroba'?'page':undefined}><${Icon} n="guardaroba" /> Guardaroba</a>
+        <a href="#/specchio" aria-current=${view==='specchio'?'page':undefined}><${Icon} n="specchio" /> Specchio</a>
+        <button class="mid" onClick=${()=>setSheet({kind:'importa'})} aria-label="Importa foto"><${Icon} n="importa" /></button>
+        <a href="#/lookbook" aria-current=${view==='lookbook'?'page':undefined}><${Icon} n="lookbook" /> Lookbook</a>
+        <a href="#/profilo" aria-current=${view==='profilo'?'page':undefined}><${Icon} n="profilo" /> Profilo</a>
       </nav>
+      ${job?html`<div class="pill-job">
+        <span class="dot"></span>
+        <span>${job.message||'Lavoro in corso'}</span>
+        ${job.found&&job.found.length?html`<b style="font-variant-numeric:tabular-nums">${job.found.length}</b>`:null}
+      </div>`:null}
+      ${busy?html`<div class="pill-job">${busy}…</div>`:null}
+      ${snack?html`<div class="snack"><span>${snack.t}</span>
+        <button class="btn small ghost" onClick=${()=>setSnack(null)}>Ok</button></div>`:null}
+      ${sheet?html`<${Sheet} sheet=${sheet} close=${()=>setSheet(null)} ctx=${{items,wardrobe,setWardrobe,slots,setSlots,
+        locks,setLocks,setRender,startImport,setPersonFromBlob,mode,setMode,quality,setQuality,premium,flash,loadAll}} />`:null}
     </div>`;
 }
+
+/* ---------------------------------------------------------------- chiavi */
+function KeyRow({p,on,onSaved,flash}){
+  const [v,setV]=useState('');
+  const save=async()=>{ const fd=new FormData(); fd.append('provider',p); fd.append('key',v.trim());
+    try{ const r=await fetch(API+'/settings',{method:'POST',body:fd}); const j=await r.json();
+      onSaved(j.premium||{}); setV(''); flash(v.trim()?`Chiave ${p} salvata`:`Chiave ${p} rimossa`);
+    }catch(e){ flash('Errore nel salvataggio'); } };
+  return html`<div class="row" style="margin:var(--s2) 0">
+    <span class="sw" style=${`background:${on?'var(--ok)':'var(--rule)'};width:10px;height:10px;border-radius:50%`}></span>
+    <span style="width:64px;font-size:var(--t-cap);text-transform:capitalize">${p}</span>
+    <input class="field" type="password" autocomplete="off" style="flex:1;min-width:0"
+      placeholder=${on?'configurata':(p==='openai'?'sk-…':'AIza…')} value=${v}
+      onInput=${e=>setV(e.target.value)} />
+    <button class="btn small" onClick=${save}>Salva</button></div>`;
+}
+
+/* ---------------------------------------------------------------- fogli */
+function Sheet({sheet,close,ctx}){
+  const k=sheet.kind;
+  const stop=e=>e.stopPropagation();
+  const head=(title,extra)=>html`<div class="sheet-h"><h2>${title}</h2>
+    <div class="row">${extra}<button class="btn small ghost" onClick=${close} aria-label="Chiudi"><${Icon} n="chiudi" s=${18} /></button></div></div>`;
+
+  if(k==='importa') return html`<div class="sheet-bg" onClick=${close}><div class="sheet" onClick=${stop}>
+    ${head('Importa capi')}
+    <p class="lead">Fotografa i vestiti o scegli le foto in cui li indossi: li ritaglio e li catalogo io.</p>
+    <label class="btn wide" style="margin-bottom:var(--s2)"><${Icon} n="fotocamera" /> Scatta una foto
+      <input class="hidden-file" type="file" accept="image/*" capture="environment"
+        onChange=${e=>ctx.startImport(e.target.files)} /></label>
+    <label class="btn wide" style="margin-bottom:var(--s2)"><${Icon} n="importa" /> Dal rullino o da file
+      <input class="hidden-file" type="file" accept="image/*" multiple
+        onChange=${e=>ctx.startImport(e.target.files)} /></label>
+    <p class="hint">Fino a 12 foto per volta. Ogni capo viene ricostruito come immagine di catalogo su fondo trasparente.</p>
+  </div></div>`;
+
+  if(k==='persona') return html`<div class="sheet-bg" onClick=${close}><div class="sheet" onClick=${stop}>
+    ${head('La tua foto')}
+    <p class="lead">Serve una foto a figura intera, in piedi e ben illuminata.</p>
+    <label class="btn wide" style="margin-bottom:var(--s2)"><${Icon} n="importa" /> Scegli una foto
+      <input class="hidden-file" type="file" accept="image/*"
+        onChange=${async e=>{ const f=e.target.files[0]; if(f){ close(); ctx.setPersonFromBlob(await downscale(f,1200)); } }} /></label>
+    <label class="btn wide" style="margin-bottom:var(--s2)"><${Icon} n="fotocamera" /> Scatta ora
+      <input class="hidden-file" type="file" accept="image/*" capture="user"
+        onChange=${async e=>{ const f=e.target.files[0]; if(f){ close(); ctx.setPersonFromBlob(await downscale(f,1200)); } }} /></label>
+    <button class="btn wide ghost" onClick=${async()=>{ close();
+      ctx.setPersonFromBlob(await (await fetch(API+'/person_demo.png')).blob()); }}>Usa una figura di esempio</button>
+    <p class="hint">La foto resta sul tuo dispositivo. Lo sfondo viene rimosso automaticamente,
+      e le proporzioni del corpo vengono misurate per appoggiarci i capi.</p>
+  </div></div>`;
+
+  if(k==='motore') return html`<div class="sheet-bg" onClick=${close}><div class="sheet" onClick=${stop}>
+    ${head('Motore')}
+    <div class="seg" style="margin-bottom:var(--s3)">
+      ${[['local','Locale'],['cloud','Cloud'],['premium','Premium']].map(([m,l])=>html`
+        <button aria-pressed=${ctx.mode===m} onClick=${()=>{ctx.setMode(m);}}>${l}</button>`)}
+    </div>
+    <p class="hint">${ctx.mode==='local'?'Sul tuo Mac, la foto non esce. Circa 80 s.'
+      :ctx.mode==='cloud'?'GPU gratuita, quota limitata. Circa 40 s.'
+      :'Modelli a pagamento. Serve una chiave in Profilo. Circa 15 s.'}</p>
+    <button class="btn primary wide" style="margin-top:var(--s4)" onClick=${close}>Fatto</button>
+  </div></div>`;
+
+  if(k==='scegli'){
+    const list=ctx.items.filter(i=>i.category===sheet.cat);
+    return html`<div class="sheet-bg" onClick=${close}><div class="sheet" onClick=${stop}>
+      ${head(CATNAME[sheet.cat]||'Scegli')}
+      ${ctx.slots[sheet.cat]?html`<button class="btn wide" style="margin-bottom:var(--s3)"
+        onClick=${()=>{ ctx.setSlots({...ctx.slots,[sheet.cat]:null}); ctx.setRender(null); close(); }}>Togli il capo</button>`:null}
+      ${list.length?html`<div class="grid" style="grid-template-columns:repeat(3,1fr)">
+        ${list.map(it=>html`<button class="plate" onClick=${()=>{
+            const s={...ctx.slots,[sheet.cat]:it};
+            if(sheet.cat==='overall'){ s.upper=null; s.lower=null; }
+            if(sheet.cat==='upper'||sheet.cat==='lower') s.overall=null;
+            ctx.setSlots(s); ctx.setRender(null); close(); }}>
+          <div class="art"><img src=${src(it)} alt="" /></div>
+          <div class="nome" style="font-size:13px">${it.label}</div></button>`)}
+      </div>`:html`<div class="empty">Nessun capo in questa categoria.</div>`}
+    </div></div>`;
+  }
+
+  if(k==='capo'){
+    const it=ctx.items.find(x=>x.id===sheet.id);
+    if(!it) return null;
+    return html`<div class="sheet-bg" onClick=${close}><div class="sheet" onClick=${stop}>
+      ${head(it.label)}
+      <div class="art" style="aspect-ratio:4/5;background:var(--art);border:1px solid var(--rule);border-radius:var(--r-plate);display:flex;align-items:center;justify-content:center">
+        <img src=${src(it)} alt="" style="width:100%;height:100%;object-fit:contain;padding:10%;filter:var(--sh-art)" /></div>
+      <div class="row" style="margin:var(--s3) 0;gap:var(--s2)">
+        <span class="sw" style=${`background:${it.color||'#ccc'};width:14px;height:14px`}></span>
+        <span class="meta">${[it.color_name,CATNAME[it.category]].filter(Boolean).join(' · ')}</span>
+      </div>
+      <dl class="dl">
+        ${it.material?html`<dt>Osservato</dt><dd>${[it.material,it.silhouette,it.pattern].filter(Boolean).join(' · ')}</dd>`:null}
+        ${it.construction?html`<dt>Costruzione</dt><dd>${it.construction}</dd>`:null}
+        ${it.description?html`<dt>Nota</dt><dd>${it.description}</dd>`:null}
+        ${it.qa&&it.qa.problems&&it.qa.problems.length?html`<dt>Da rivedere</dt><dd>${it.qa.problems.join(', ')}</dd>`:null}
+        ${it.engine?html`<dt>Ricostruzione</dt><dd>${it.engine}</dd>`:null}
+      </dl>
+      <div class="row" style="gap:var(--s2);margin-top:var(--s4);flex-wrap:wrap">
+        <button class="btn primary" onClick=${()=>{ const c=it.category==='outerwear'?'outerwear':it.category;
+          const s={...ctx.slots,[c==='accessory'?'upper':c]:it};
+          if(c==='overall'){ s.upper=null; s.lower=null; }
+          ctx.setSlots(s); ctx.setRender(null); close(); location.hash='#/specchio'; }}>Mettilo sul tavolo</button>
+        ${!it.demo?html`<button class="btn" onClick=${async()=>{
+          if(!confirm(`Eliminare "${it.label}"?`)) return;
+          await fetch(API+`/api/wardrobe/${it.id}`,{method:'DELETE'});
+          ctx.setWardrobe(w=>w.filter(x=>x.id!==it.id)); close(); ctx.flash('Capo eliminato');
+        }}><${Icon} n="cestino" s=${16} /> Elimina</button>`:null}
+      </div>
+    </div></div>`;
+  }
+
+  if(k==='revisione') return html`<${Revisione} ids=${sheet.ids} close=${close} ctx=${ctx} />`;
+  return null;
+}
+
+/* ---------------------------------------------------------------- revisione */
+function Revisione({ids,close,ctx}){
+  const all=ctx.wardrobe.filter(i=>ids.includes(i.id));
+  const [off,setOff]=useState({});
+  const [labels,setLabels]=useState({});
+  const [cats,setCats]=useState({});
+  const keep=all.filter(i=>!off[i.id]);
+
+  async function conferma(){
+    for(const it of all){
+      if(off[it.id]){ await fetch(API+`/api/wardrobe/${it.id}`,{method:'DELETE'}); continue; }
+      const nl=labels[it.id], nc=cats[it.id];
+      if(nl||nc){ const fd=new FormData(); fd.append('label',nl||it.label); fd.append('category',nc||it.category);
+        await fetch(API+`/api/wardrobe/${it.id}`,{method:'POST',body:fd}); }
+    }
+    await ctx.loadAll(); ls.set(LS.review,[]); close();
+    ctx.flash(`${keep.length} capi aggiunti al guardaroba`);
+  }
+  return html`<div class="sheet-bg"><div class="sheet full">
+    <div class="sheet-h"><h2>Revisione</h2>
+      <button class="btn small ghost" onClick=${close} aria-label="Chiudi"><${Icon} n="chiudi" s=${18} /></button></div>
+    <div class="meta">${all.length} capi trovati · ${keep.length} inclusi · ${all.length-keep.length} esclusi</div>
+    <p class="hint">La ricostruzione usa solo ciò che si vede nella foto. I dettagli incerti vengono omessi.</p>
+    <div style="margin:var(--s4) 0">
+      ${all.map(it=>html`<div class=${'cand'+(off[it.id]?' off':'')}>
+        <img class="th" src=${src(it)} alt="" />
+        <div style="flex:1;min-width:0">
+          <input class="field" value=${labels[it.id]??it.label} style="margin-bottom:6px"
+            onInput=${e=>setLabels({...labels,[it.id]:e.target.value})} aria-label="Nome del capo" />
+          <div class="tags">${CATS.map(([c,l])=>html`
+            <button class="tag" aria-pressed=${(cats[it.id]||it.category)===c}
+              onClick=${()=>setCats({...cats,[it.id]:c})}>${l}</button>`)}</div>
+          <div class="row" style="gap:6px"><span class="sw" style=${`background:${it.color||'#ccc'}`}></span>
+            <span class="meta">${it.color_name||''} ${it.confidence?`· confidenza ${it.confidence}`:''}</span></div>
+          ${it.material?html`<dl class="dl"><dt>Osservato</dt><dd>${[it.material,it.silhouette,it.pattern].filter(Boolean).join(' · ')}</dd></dl>`:null}
+          ${it.qa&&it.qa.problems&&it.qa.problems.length?html`<div class="err-box">${it.qa.problems.join(', ')}</div>`:null}
+          ${it.possible_duplicate_of?html`<div class="hint">Sembra lo stesso capo di uno già presente.</div>`:null}
+        </div>
+        <button class="btn small" onClick=${()=>setOff({...off,[it.id]:!off[it.id]})}>
+          ${off[it.id]?'Includi':'Escludi'}</button>
+      </div>`)}
+    </div>
+    <div class="row" style="gap:var(--s2);position:sticky;bottom:0;background:var(--paper);padding:var(--s3) 0">
+      <button class="btn primary" style="flex:1" onClick=${conferma}>Conferma ${keep.length} capi</button>
+      <button class="btn" onClick=${()=>setOff(Object.fromEntries(all.filter(i=>i.confidence==='low'||(i.qa&&i.qa.ok===false)).map(i=>[i.id,true])))}>
+        Scarta i dubbi</button>
+    </div>
+  </div></div>`;
+}
+
 render(html`<${App} />`, document.getElementById('app'));
 </script>
 </body>

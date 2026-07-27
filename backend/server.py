@@ -213,10 +213,16 @@ def analyze_endpoint(person: UploadFile = File(...)) -> dict:
 
 
 @app.post("/cutout")
-def cutout_endpoint(image: UploadFile = File(...)) -> StreamingResponse:
-    from garment_cutout import cutout_to_white  # import pigro: rembg pesante
+def cutout_endpoint(image: UploadFile = File(...), alpha: str = Form("")) -> StreamingResponse:
+    """Scontorno. Con alpha=1 restituisce la trasparenza vera, per posare il
+    soggetto sul fondo scuro dell'app invece che su un rettangolo bianco."""
+    from garment_cutout import cutout_rgba, cutout_to_white  # import pigro: rembg pesante
     img = Image.open(io.BytesIO(image.file.read())).convert("RGB")
-    out = cutout_to_white(img)
+    if alpha:
+        from chroma import trim_to_content
+        out = trim_to_content(cutout_rgba(img), pad_frac=0.02, square=False)
+    else:
+        out = cutout_to_white(img)
     buf = io.BytesIO()
     out.save(buf, format="PNG")
     buf.seek(0)
@@ -373,6 +379,14 @@ def api_wardrobe_update(item_id: str, label: str = Form(""), category: str = For
             _save_wardrobe(items)
             return {"ok": True, "item": i}
     return JSONResponse(status_code=404, content={"error": "capo non trovato"})
+
+
+@app.post("/api/anchors")
+def api_anchors(person: UploadFile = File(...)) -> dict:
+    """Dove cade il torso, dove le gambe, dove i piedi: serve al montaggio."""
+    from mask_from_person import person_anchors
+    img = Image.open(io.BytesIO(person.file.read())).convert("RGB")
+    return person_anchors(img)
 
 
 @app.get("/settings")

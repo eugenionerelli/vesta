@@ -58,6 +58,53 @@ def garment_mask(person: Image.Image, category: str = "upper", dilate: int = 2, 
 
 
 @torch.no_grad()
+def person_anchors(img: Image.Image) -> dict:
+    """Riquadri normalizzati dove appoggiare i capi nel montaggio.
+
+    Ricavati dalla segmentazione reale della persona, non da costanti: una foto
+    seduta o inquadrata stretta ha proporzioni molto diverse da una in piedi.
+    """
+    proc, model = _load("cpu")
+    img = img.convert("RGB")
+    inputs = proc(images=img, return_tensors="pt")
+    up = torch.nn.functional.interpolate(model(**inputs).logits, size=img.size[::-1],
+                                         mode="bilinear", align_corners=False)
+    seg = up.argmax(1)[0].cpu().numpy()
+    h, w = seg.shape
+
+    def box(classes, grow=0.0):
+        m = np.isin(seg, classes)
+        if m.sum() < (h * w) * 0.002:
+            return None
+        ys, xs = np.where(m)
+        l, r = xs.min() / w, xs.max() / w
+        t, b = ys.min() / h, ys.max() / h
+        if grow:
+            dx, dy = (r - l) * grow, (b - t) * grow
+            l, r, t, b = max(0.0, l - dx), min(1.0, r + dx), max(0.0, t - dy), min(1.0, b + dy)
+        return [round(float(v), 4) for v in (l, t, r, b)]
+
+    upper = box([4, 7, 14, 15], 0.03)          # maglia/abito piu' le braccia
+    lower = box([5, 6, 12, 13], 0.02)          # gonna/pantaloni/gambe
+    shoes = box([9, 10], 0.05)
+    person = box([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17])
+
+    out = {}
+    if upper:
+        out["upper"] = upper
+        out["outerwear"] = [max(0.0, upper[0] - 0.04), upper[1], min(1.0, upper[2] + 0.04), upper[3]]
+    if lower:
+        out["lower"] = lower
+    if shoes:
+        out["shoes"] = shoes
+    if upper and lower:
+        out["overall"] = [min(upper[0], lower[0]), upper[1], max(upper[2], lower[2]), lower[3]]
+    elif upper:
+        out["overall"] = [upper[0], upper[1], upper[2], min(1.0, upper[3] + 0.3)]
+    return {"anchors": out, "person": person, "found": sorted(out)}
+
+
+@torch.no_grad()
 def classify_garment(img: Image.Image) -> str:
     """Indovina la categoria di un capo (anche flat) via segformer: upper/lower/overall."""
     proc, model = _load("cpu")
