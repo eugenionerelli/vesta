@@ -3,170 +3,252 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Vesta — il tuo camerino infinito</title>
-<meta name="description" content="Carica una foto, scegli un capo: l'AI te lo fa indossare. Analisi dei colori, guardaroba intelligente, generazione in locale o premium." />
+<title>Vesta — il camerino che hai in casa</title>
+<meta name="description" content="Fotografa i tuoi vestiti: Vesta li ricostruisce come immagini di catalogo, ti dice quali colori ti stanno bene e te li fa provare addosso. Gira sul tuo Mac." />
+<meta name="theme-color" content="#16130F" />
+<meta property="og:title" content="Vesta — il camerino che hai in casa" />
+<meta property="og:description" content="Fotografa i vestiti, provali addosso. Sul tuo Mac." />
 <link rel="icon" type="image/png" href="favicon.png" />
 <style>
-  :root{
-    --bg:#f6f5f1; --panel:#ffffff; --line:#e4e1d8; --text:#191a1a; --muted:#6d6a63;
-    --accent:#1d9e75; --accent-ink:#ffffff; --radius:18px;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{ --bg:#0e0f11; --panel:#17191c; --line:#2a2e33; --text:#f1f0ed; --muted:#a4a09a;
-           --accent:#22b083; --accent-ink:#062018; }
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;line-height:1.6}
-  a{color:inherit}
-  .wrap{max-width:1020px;margin:0 auto;padding:0 22px}
+:root{
+  --ground:#16130F; --surface:#1F1A15; --sunk:#100D0A; --line:#383026; --line-soft:#261F19;
+  --ink:#F4EDE2; --ink-2:#B6A88F; --ink-3:#7E7263; --brass:#C6963F;
+  --glow:rgba(198,150,63,.16);
+  --f-display:Didot,"Bodoni 72","Bodoni MT",Georgia,"Times New Roman",serif;
+  --f-ui:"Avenir Next","Avenir","Helvetica Neue",system-ui,-apple-system,sans-serif;
+  --f-num:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --pad:22px; --e-out:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-ui);font-size:16px;
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;
+  background-image:var(--grain);background-size:180px 180px;mix-blend-mode:overlay}
+a{color:inherit}
+img{max-width:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 var(--pad)}
+.meta{font-family:var(--f-num);font-size:10.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--ink-3)}
+:focus-visible{outline:1.5px solid var(--brass);outline-offset:3px}
 
-  header{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:650;font-size:19px;letter-spacing:.2px}
-  .brand svg{display:block}
-  nav a{color:var(--muted);text-decoration:none;font-size:14px;margin-left:18px}
-  nav a:hover{color:var(--text)}
+header{display:flex;align-items:center;justify-content:space-between;padding:26px 0}
+.brand{font-family:var(--f-display);font-size:26px;letter-spacing:.02em}
+header nav a{font-family:var(--f-num);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--ink-3);text-decoration:none;margin-left:22px;transition:color .2s}
+header nav a:hover{color:var(--ink)}
+@media(max-width:640px){ header nav a:not(.gh){display:none} }
 
-  .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:center;padding:52px 0 64px}
-  h1{font-size:44px;line-height:1.12;margin:0 0 14px;font-weight:700;letter-spacing:-.5px}
-  .sub{font-size:17px;color:var(--muted);margin:0 0 26px;max-width:46ch}
-  .cta{display:flex;gap:12px;flex-wrap:wrap}
-  .btn{display:inline-block;text-decoration:none;font-size:15px;font-weight:550;
-    padding:13px 22px;border-radius:12px;border:1px solid var(--line);background:var(--panel)}
-  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-  .note{font-size:12.5px;color:var(--muted);margin-top:14px}
+.hero{display:grid;grid-template-columns:1fr;gap:36px;align-items:center;padding:34px 0 68px}
+@media(min-width:900px){ .hero{grid-template-columns:1fr 1fr;gap:56px;padding:56px 0 96px} }
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(38px,7vw,66px);line-height:1.02;
+  letter-spacing:-.02em;margin:.15em 0 .3em;text-wrap:balance}
+.lede{font-size:clamp(16px,2.2vw,19px);color:var(--ink-2);max-width:46ch;margin:0 0 30px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:99px;
+  padding:13px 22px;text-decoration:none;font-size:15px;transition:all .25s var(--e-out)}
+.btn:hover{border-color:var(--ink-3);background:var(--surface)}
+.btn.primary{background:var(--ink);color:var(--ground);border-color:var(--ink);font-weight:500}
+.btn.primary:hover{background:#fff}
 
-  /* mockup telefono */
-  .phone{width:290px;margin:0 auto;background:var(--panel);border:1px solid var(--line);
-    border-radius:38px;padding:14px;box-shadow:0 24px 60px rgba(0,0,0,.14)}
-  .screen{border-radius:26px;overflow:hidden;border:1px solid var(--line)}
-  .scr-top{padding:14px 14px 8px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}
-  .scr-hero{margin:0 12px;border-radius:14px;background:linear-gradient(180deg,#e8e6df, #d9d6cc);
-    height:250px;display:flex;align-items:flex-end;justify-content:center;position:relative}
-  @media (prefers-color-scheme: dark){ .scr-hero{background:linear-gradient(180deg,#23262a,#1a1c1f)} }
-  .scr-hero svg{display:block}
-  .paldots{display:flex;gap:6px;padding:10px 14px 4px}
-  .paldots span{width:14px;height:14px;border-radius:50%;border:1px solid rgba(128,128,128,.3)}
-  .chips{display:flex;gap:8px;padding:8px 14px 16px}
-  .chip{flex:1;aspect-ratio:1;border-radius:10px;border:1px solid var(--line)}
+.stage{position:relative;aspect-ratio:3/4;border:1px solid var(--line-soft);border-radius:6px;overflow:hidden;
+  background:radial-gradient(90% 60% at 50% 6%,var(--surface),var(--sunk) 72%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),inset 0 -70px 100px -60px rgba(0,0,0,.85)}
+.stage::before{content:"";position:absolute;top:0;left:12%;right:12%;height:1px;z-index:3;
+  background:linear-gradient(90deg,transparent,var(--brass),transparent);opacity:.6}
+.stage::after{content:"";position:absolute;top:-70px;left:50%;width:70%;height:150px;transform:translateX(-50%);
+  background:radial-gradient(50% 60% at 50% 50%,var(--glow),transparent 70%)}
+.figura{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:1}
+.capo{position:absolute;object-fit:contain;z-index:2;
+  filter:drop-shadow(0 18px 26px rgba(0,0,0,.55));animation:drop .55s var(--e-out) both}
+@keyframes drop{from{opacity:0;transform:translateY(-12px) scale(1.02)}to{opacity:1;transform:none}}
+.stage .lab{position:absolute;left:12px;top:12px;z-index:3;font-family:var(--f-num);font-size:9.5px;
+  text-transform:uppercase;letter-spacing:.14em;color:var(--ink-2);background:rgba(0,0,0,.4);
+  border:1px solid var(--line-soft);border-radius:2px;padding:5px 9px;backdrop-filter:blur(8px)}
+.picker{display:flex;gap:10px;margin-top:14px;justify-content:center;flex-wrap:wrap}
+.pick{width:62px;height:62px;border:1px solid var(--line-soft);border-radius:4px;background:var(--sunk);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:7px;
+  transition:border-color .25s var(--e-out),transform .25s var(--e-out)}
+.pick:hover{transform:translateY(-3px)}
+.pick[aria-pressed="true"]{border-color:var(--brass)}
+.pick img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+.note{text-align:center;margin-top:10px}
 
-  h2{font-size:26px;margin:0 0 8px;letter-spacing:-.3px}
-  .lead{color:var(--muted);margin:0 0 26px;font-size:15px}
-  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding-bottom:8px}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
-  .card h3{margin:8px 0 6px;font-size:16px}
-  .card p{margin:0;font-size:13.5px;color:var(--muted)}
-  .ic{width:38px;height:38px;border-radius:10px;background:color-mix(in srgb, var(--accent) 14%, transparent);
-    display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:19px}
+section{padding:64px 0;border-top:1px solid var(--line-soft)}
+h2{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,4vw,38px);line-height:1.1;
+  letter-spacing:-.015em;margin:.2em 0 .5em;text-wrap:balance}
+.sub{color:var(--ink-2);max-width:60ch;margin:0 0 34px}
+.cols{display:grid;grid-template-columns:1fr;gap:26px}
+@media(min-width:760px){ .cols{grid-template-columns:repeat(3,1fr);gap:34px} }
+.card h3{font-family:var(--f-display);font-weight:400;font-size:21px;margin:14px 0 6px}
+.card p{color:var(--ink-2);font-size:14.5px;margin:0}
+.num{font-family:var(--f-num);font-size:10.5px;letter-spacing:.16em;color:var(--brass)}
 
-  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0 8px}
-  .step{border-left:2px solid var(--accent);padding:2px 0 2px 14px}
-  .step b{display:block;font-size:15px;margin-bottom:3px}
-  .step span{font-size:13.5px;color:var(--muted)}
+.steps{display:grid;gap:22px}
+@media(min-width:760px){ .steps{grid-template-columns:repeat(4,1fr);gap:28px} }
+.step{border-top:1px solid var(--line);padding-top:16px}
+.step b{display:block;font-family:var(--f-display);font-weight:400;font-size:19px;margin:6px 0 5px}
+.step p{color:var(--ink-2);font-size:14px;margin:0}
 
-  section{padding:34px 0}
-  footer{border-top:1px solid var(--line);margin-top:44px;padding:26px 0 40px;font-size:13px;color:var(--muted)}
-  footer a{color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:13px 10px;border-bottom:1px solid var(--line-soft)}
+th{font-family:var(--f-num);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-3);
+  font-weight:400}
+td.n{font-family:var(--f-num);font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.tablewrap{overflow-x:auto}
 
-  @media (max-width:840px){
-    .hero{grid-template-columns:1fr;padding:26px 0 40px}
-    h1{font-size:34px}
-    .cards{grid-template-columns:repeat(2,1fr)}
-    .steps{grid-template-columns:1fr}
-    .phone{width:260px}
-  }
+pre{background:var(--sunk);border:1px solid var(--line-soft);border-radius:5px;padding:16px 18px;
+  overflow-x:auto;font-family:var(--f-num);font-size:13px;color:var(--ink-2);line-height:1.7}
+.warn{border-left:2px solid var(--brass);padding:4px 0 4px 16px;color:var(--ink-2);font-size:14.5px;
+  max-width:62ch}
+footer{padding:44px 0 60px;border-top:1px solid var(--line-soft);color:var(--ink-3);font-size:13.5px;
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
 </style>
 </head>
 <body>
 <div class="wrap">
+
   <header>
-    <div class="brand">
-      <svg width="30" height="30" viewBox="0 0 512 512" aria-hidden="true">
-        <rect width="512" height="512" rx="112" fill="#1d9e75"/>
-        <circle cx="256" cy="122" r="36" fill="#fff"/><circle cx="256" cy="122" r="16" fill="#1d9e75"/>
-        <g stroke="#fff" stroke-width="34" stroke-linecap="round" stroke-linejoin="round" fill="none">
-          <path d="M256 154 L256 206 L114 360 H398 L256 206" />
-        </g>
-      </svg>
-      Vesta
-    </div>
+    <span class="brand">Vesta</span>
     <nav>
-      <a href="#funzioni">Funzioni</a>
       <a href="#come">Come funziona</a>
-      <a href="https://github.com/eugenionerelli/vesta">GitHub</a>
+      <a href="#motori">Motori</a>
+      <a href="#installare">Installare</a>
+      <a class="gh" href="https://github.com/eugenionerelli/vesta">GitHub</a>
     </nav>
   </header>
 
   <div class="hero">
     <div>
-      <h1>Il tuo camerino infinito.</h1>
-      <p class="sub">Carica una foto, scegli un capo: Vesta te lo fa indossare. Ti dice anche quali
-        colori ti stanno bene, con una palette calcolata sulla tua pelle, e tiene in ordine il guardaroba.</p>
+      <span class="meta">Guardaroba virtuale · gira sul tuo Mac</span>
+      <h1>Il camerino che hai in casa.</h1>
+      <p class="lede">Fotografa i vestiti che possiedi. Vesta li ricostruisce come immagini di catalogo,
+        li cataloga da sola e te li fa provare addosso, sulla tua foto.</p>
       <div class="cta">
-        <a class="btn primary" href="https://github.com/eugenionerelli/vesta">Scarica da GitHub</a>
-        <a class="btn" href="https://github.com/eugenionerelli/vesta/blob/main/PIANO.md">Piano prodotto</a>
+        <a class="btn primary" href="https://github.com/eugenionerelli/vesta">Scarica il codice</a>
+        <a class="btn" href="#come">Come funziona</a>
       </div>
-      <p class="note">Gira in locale su Mac Apple Silicon. In modalità Premium usa modelli di
-        generazione immagini di ultima generazione con la tua API key.</p>
     </div>
-    <div class="phone" aria-hidden="true">
-      <div class="screen">
-        <div class="scr-top"><b style="color:var(--text)">Ciao</b><span>Estate</span></div>
-        <div class="scr-hero">
-          <svg width="150" height="220" viewBox="0 0 150 220">
-            <circle cx="75" cy="38" r="22" fill="#c9a07a"/>
-            <rect x="47" y="64" width="56" height="78" rx="16" fill="#1d9e75"/>
-            <rect x="34" y="68" width="15" height="52" rx="7" fill="#c9a07a"/>
-            <rect x="101" y="68" width="15" height="52" rx="7" fill="#c9a07a"/>
-            <rect x="51" y="142" width="21" height="70" rx="8" fill="#2c2c2a"/>
-            <rect x="78" y="142" width="21" height="70" rx="8" fill="#2c2c2a"/>
-          </svg>
-        </div>
-        <div class="paldots">
-          <span style="background:#e7a7b5"></span><span style="background:#b7a7d6"></span>
-          <span style="background:#9fb8d6"></span><span style="background:#a9c2b0"></span>
-          <span style="background:#6e7e8f"></span>
-        </div>
-        <div class="chips">
-          <div class="chip" style="background:#8d939c"></div>
-          <div class="chip" style="background:#efe6d2"></div>
-          <div class="chip" style="background:#5b3a24"></div>
-          <div class="chip" style="background:#22232a"></div>
-        </div>
+
+    <div>
+      <div class="stage">
+        <img class="figura" src="media/figura.png" alt="Una figura in piedi nel camerino" />
+        <img class="capo" id="capo" src="media/top_3.png" alt=""
+             style="left:20%;top:22%;width:60%;height:38%" />
+        <span class="lab">Montaggio</span>
       </div>
+      <div class="picker" id="picker"></div>
+      <p class="note meta">Tocca un capo: qui è un montaggio istantaneo, nell'app diventa una prova vera</p>
     </div>
   </div>
 
-  <section id="funzioni">
-    <h2>Cosa fa</h2>
-    <p class="lead">Quattro cose, fatte bene.</p>
-    <div class="cards">
-      <div class="card"><div class="ic">↺</div><h3>Try-on realistico</h3>
-        <p>Ti vedi addosso i capi del guardaroba, o quelli che fotografi, mantenendo viso e posa.</p></div>
-      <div class="card"><div class="ic">◐</div><h3>Palette personale</h3>
-        <p>Analisi del sottotono dalla foto: stagione, colori consigliati e capi che ti valorizzano.</p></div>
-      <div class="card"><div class="ic">▦</div><h3>Guardaroba smart</h3>
-        <p>Fotografa un capo: sfondo rimosso e categoria assegnata da soli. Filtri per tipo.</p></div>
-      <div class="card"><div class="ic">✦</div><h3>Locale o premium</h3>
-        <p>Tutto sul tuo Mac per privacy, o modelli premium con la tua API key per la qualità massima.</p></div>
+  <section id="come">
+    <span class="num">Come funziona</span>
+    <h2>Dalla foto sul telefono alla scheda di catalogo.</h2>
+    <p class="sub">Il passaggio che cambia tutto non è cancellare lo sfondo: è <em>ricostruire</em> il capo.
+      Un modello lo ridisegna come foto prodotto su un fondo pieno, che poi diventa trasparenza vera.
+      Così spariscono il corpo, le pieghe da indosso e le ombre.</p>
+    <div class="steps">
+      <div class="step"><span class="meta">Primo</span><b>Scatti</b>
+        <p>Carichi fino a dodici foto, anche quelle in cui sei vestito.</p></div>
+      <div class="step"><span class="meta">Secondo</span><b>Inventario</b>
+        <p>Un modello elenca i capi visibili con colore, tessuto, taglio, e ciò che non si vede.</p></div>
+      <div class="step"><span class="meta">Terzo</span><b>Ricostruzione</b>
+        <p>Ogni capo viene ridisegnato su fondo pieno e scontornato con bordo morbido.</p></div>
+      <div class="step"><span class="meta">Quarto</span><b>Prova</b>
+        <p>Componi il look e lo sviluppi sulla tua figura.</p></div>
     </div>
   </section>
 
-  <section id="come">
-    <h2>Come funziona</h2>
-    <div class="steps">
-      <div class="step"><b>1. Una foto</b><span>A figura intera, dalla webcam o dal rullino. Resta sul tuo computer.</span></div>
-      <div class="step"><b>2. Un capo</b><span>Dal guardaroba, o fotografato al volo: ci pensa Vesta a ritagliarlo.</span></div>
-      <div class="step"><b>3. Indossato</b><span>Il render arriva in pochi secondi in premium, con cache dei look già provati.</span></div>
+  <section>
+    <span class="num">Cosa fa</span>
+    <h2>Non solo la prova.</h2>
+    <div class="cols">
+      <div class="card"><span class="meta">Colori</span>
+        <h3>La tua stagione</h3>
+        <p>Dalla foto stima il sottotono della pelle in CIELAB e ne ricava la palette e i capi che ti stanno bene.</p></div>
+      <div class="card"><span class="meta">Guardaroba</span>
+        <h3>Catalogato da solo</h3>
+        <p>Categoria, colore dominante e materiale vengono assegnati durante l'importazione. I doppioni
+          vengono segnalati, mai cancellati.</p></div>
+      <div class="card"><span class="meta">Specchio</span>
+        <h3>Prima guardi, poi generi</h3>
+        <p>Comporre un look è immediato e gratuito. Il modello parte solo quando lo chiedi tu.</p></div>
     </div>
+  </section>
+
+  <section id="motori">
+    <span class="num">Motori</span>
+    <h2>Tre modi di generare.</h2>
+    <p class="sub">Si sceglie in base a cosa serve: riservatezza, costo zero, o qualità massima.</p>
+    <div class="tablewrap">
+      <table>
+        <tr><th>Motore</th><th>Dove gira</th><th>Tempo</th><th>Costo per immagine</th></tr>
+        <tr><td>Locale</td><td>Sul tuo Mac, Apple Silicon</td><td class="n">~90 s</td><td class="n">0</td></tr>
+        <tr><td>Cloud</td><td>GPU gratuita, quota limitata</td><td class="n">~25 s</td><td class="n">0</td></tr>
+        <tr><td>Premium</td><td>OpenAI o Google, con la tua chiave</td><td class="n">~15 s</td><td class="n">0,04–0,25 $</td></tr>
+      </table>
+    </div>
+    <p class="warn" style="margin-top:26px">In locale e in cloud i capi restano sul tuo computer. In premium
+      la foto viene inviata al provider che scegli: sta scritto nell'app, sotto il pulsante, ogni volta.</p>
+  </section>
+
+  <section id="installare">
+    <span class="num">Installare</span>
+    <h2>Serve un Mac con Apple Silicon.</h2>
+    <p class="sub">Il primo avvio scarica i modelli, circa quattro gigabyte. Dopo funziona anche senza rete,
+      in locale.</p>
+<pre>git clone https://github.com/eugenionerelli/vesta
+cd vesta/backend
+python3.11 -m venv .venv
+.venv/bin/pip install -r ../requirements.txt
+git clone https://github.com/Zheng-Chong/CatVTON
+.venv/bin/python download_weights.py
+.venv/bin/python -m uvicorn server:app --host 0.0.0.0 --port 8770</pre>
+    <p class="sub" style="margin-top:22px">Poi si apre <span class="meta">127.0.0.1:8770</span> sul Mac, oppure
+      l'indirizzo del Mac dal telefono sulla stessa rete: da iPhone si aggiunge alla schermata Home e si
+      comporta come un'app.</p>
   </section>
 
   <footer>
-    Vibe coded da Eugenio Nerelli e Gianmattia Barone ·
-    <a href="https://github.com/eugenionerelli/vesta">Codice su GitHub</a> ·
-    I motori open inclusi hanno licenza non commerciale; la modalità Premium usa API con termini commerciali.
+    <span>Vibe coded da Eugenio Nerelli e Gianmattia Barone.</span>
+    <span>I motori di prova hanno licenza non commerciale.</span>
   </footer>
 </div>
+
+<script>
+(function grain(){
+  const n=180,c=document.createElement('canvas');c.width=c.height=n;
+  const x=c.getContext('2d'),d=x.createImageData(n,n);
+  for(let i=0;i<d.data.length;i+=4){const v=200+Math.random()*55;
+    d.data[i]=d.data[i+1]=d.data[i+2]=v;d.data[i+3]=Math.random()*22;}
+  x.putImageData(d,0,0);
+  document.documentElement.style.setProperty('--grain',`url(${c.toDataURL()})`);
+})();
+
+// montaggio dal vivo: sono gli stessi PNG che produce l'app
+const CAPI=[
+  {f:'media/top_3.png',       box:[20,22,60,38]},
+  {f:'media/top_4.png',       box:[21,23,58,35]},
+  {f:'media/dress_2.png',     box:[22,22,56,62]},
+  {f:'media/kit_lower_4.png', box:[24,52,52,44]},
+];
+const capo=document.getElementById('capo'), picker=document.getElementById('picker');
+CAPI.forEach((c,i)=>{
+  const b=document.createElement('button');
+  b.className='pick'; b.setAttribute('aria-pressed', i===0?'true':'false');
+  b.setAttribute('aria-label','Prova questo capo sulla figura');
+  b.innerHTML='<img src="'+c.f+'" alt="" loading="lazy">';
+  b.onclick=function(){
+    Array.prototype.forEach.call(picker.children,function(x){x.setAttribute('aria-pressed','false');});
+    b.setAttribute('aria-pressed','true');
+    capo.style.left=c.box[0]+'%'; capo.style.top=c.box[1]+'%';
+    capo.style.width=c.box[2]+'%'; capo.style.height=c.box[3]+'%';
+    capo.src=c.f;
+    capo.style.animation='none'; void capo.offsetWidth; capo.style.animation='';
+  };
+  picker.appendChild(b);
+});
+</script>
 </body>
 </html>

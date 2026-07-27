@@ -81,7 +81,7 @@ a{color:inherit;text-decoration:none}
 
 .app{min-height:100dvh;display:flex;flex-direction:column;padding-bottom:calc(70px + env(safe-area-inset-bottom))}
 .page{padding:0 var(--pad) var(--s7);max-width:1380px;margin:0 auto;width:100%}
-/* il cambio di vista e' una dissolvenza vera, non un salto */
+/* il cambio di vista è una dissolvenza vera, non un salto */
 @media(prefers-reduced-motion:no-preference){
   html:not(.vt) .page{animation:enter .42s var(--e-out) both}
   @keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -204,7 +204,7 @@ nav .mid .ico{width:21px;height:21px}
   max-height:62svh;display:flex;align-items:center;justify-content:center;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.05),inset 0 -60px 90px -60px rgba(0,0,0,.8)}
 @media(min-width:1024px){ .stage{max-height:min(72svh,720px)} }
-/* la barra di lampadine in alto: e' uno specchio da camerino */
+/* la barra di lampadine in alto: è uno specchio da camerino */
 .stage::before{content:"";position:absolute;top:0;left:12%;right:12%;height:1px;
   background:linear-gradient(90deg,transparent,var(--brass),transparent);opacity:.55}
 .stage::after{content:"";position:absolute;top:-70px;left:50%;width:70%;height:150px;transform:translateX(-50%);
@@ -368,10 +368,15 @@ const Icon = ({n, s=20}) => html`<svg class="ico" viewBox="0 0 24 24" style=${`w
 })();
 const supportsVT = typeof document.startViewTransition === 'function';
 if(supportsVT) document.documentElement.classList.add('vt');
+let vtRunning=false;
 function withTransition(fn){
-  if(!supportsVT || matchMedia('(prefers-reduced-motion: reduce)').matches){ fn(); return; }
-  document.startViewTransition(async()=>{ fn();
-    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); });
+  if(!supportsVT || vtRunning || matchMedia('(prefers-reduced-motion: reduce)').matches){ fn(); return; }
+  try{
+    vtRunning=true;
+    const t=document.startViewTransition(async()=>{ fn();
+      await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); });
+    t.finished.catch(()=>{}).finally(()=>{ vtRunning=false; });
+  }catch(e){ vtRunning=false; fn(); }
 }
 
 const ls = { get:(k,d)=>{ try{ const v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } },
