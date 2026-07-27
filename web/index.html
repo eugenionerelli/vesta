@@ -132,7 +132,9 @@ a{color:inherit;text-decoration:none}
 .plate:hover .art img{transform:translateY(-5px) scale(1.015)}
 .plate .nome{font-family:var(--f-display);font-size:17px;line-height:1.25;margin:var(--s3) 0 3px;
   letter-spacing:-.005em}
-.plate .riga{display:flex;align-items:center;gap:7px}
+.plate .riga{display:flex;align-items:center;gap:7px;min-width:0}
+.plate .riga .meta{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.plate .nome{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sw{width:9px;height:9px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(128,128,128,.4);flex:none}
 .badge{position:absolute;top:8px;left:8px;font-family:var(--f-num);font-size:9.5px;text-transform:uppercase;
   letter-spacing:.12em;padding:4px 8px;border-radius:2px;color:var(--ink-3);
