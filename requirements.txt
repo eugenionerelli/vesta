@@ -1,4 +1,4 @@
-# Giammi backend — dipendenze principali (Apple Silicon / Python 3.11)
+# Giammi backend, dipendenze principali (Apple Silicon / Python 3.11)
 torch
 torchvision
 diffusers

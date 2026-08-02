@@ -1,4 +1,4 @@
-# Vesta — try-on + color analysis (locale, Apple Silicon)
+# Vesta, try-on + color analysis (locale, Apple Silicon)
 
 App mobile-web che gira **in locale** su Mac M4 (GPU Metal / MPS). Il Mac fa da
 **server di inferenza** e serve anche il client web: un solo comando, un solo indirizzo.
@@ -49,7 +49,7 @@ Modalità **cloud**: try-on via Space gratuito IDM-VTON (~25s, alta qualità); f
 
 ## App (web/index.html)
 - Onboarding: carica la tua foto a figura intera (o "usa foto di esempio"). Resta in locale.
-- Home: tu in primo piano, **palette personale + stagione + consiglio**, **Look del giorno**,
+- Home: tu in primo piano, **palette personale + stagione + consiglio**, **Look del giorno**
   inventario a slot (tap = indossa), selettore qualità, shuffle, confronto "originale".
 - "Aggiungi"/fotocamera: carichi la foto di un capo e te lo provi addosso.
 - Cache per capo (ri-selezione istantanea); stato di caricamento con timer per i ~90s.
@@ -65,9 +65,9 @@ Con bf16 una generazione usa ~1,9 GB di GPU. ⚠️ Tieni libera la RAM: avere *
 Vesta attivi insieme (o altri modelli grossi) manda il Mac in swap e rallenta tutto di 15-20×.
 
 ## File
-- `server.py` — API + serve il client (carica la pipeline una volta, bf16, no-cache).
-- `color_analysis.py` — analisi colore (ITA°/CIELAB → stagione + palette).
-- `tryon.py` — try-on da riga di comando. `mask_from_person.py` — maschera capo.
-- `download_weights.py` — scarica solo i pesi necessari. `check_env.py` — sanity MPS.
-- `../web/` — client (index.html, garments/, person_sample.jpg, garments.json).
-- `CatVTON/` — repo del modello (terze parti).
+- `server.py`, API + serve il client (carica la pipeline una volta, bf16, no-cache).
+- `color_analysis.py`, analisi colore (ITA°/CIELAB → stagione + palette).
+- `tryon.py`, try-on da riga di comando. `mask_from_person.py`, maschera capo.
+- `download_weights.py`, scarica solo i pesi necessari. `check_env.py`, sanity MPS.
+- `../web/`, client (index.html, garments/, person_sample.jpg, garments.json).
+- `CatVTON/`, repo del modello (terze parti).

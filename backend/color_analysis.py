@@ -19,7 +19,7 @@ from mask_from_person import _load  # condivide lo stesso modello segformer
 # id classi segformer
 FACE, HAIR, L_ARM, R_ARM = 11, 2, 14, 15
 
-# palette stagionali (hex) — set curato di colori tipici per stagione
+# palette stagionali (hex), set curato di colori tipici per stagione
 SEASON_PALETTES = {
     "Primavera": ["#F28E7B", "#F6C18B", "#F2D06B", "#8FBF6B", "#46C7C7", "#F5EFE0", "#C89B6B"],
     "Estate":    ["#E7A7B5", "#B7A7D6", "#9FB8D6", "#A9C2B0", "#6E7E8F", "#EDEDEA", "#C9A8C4"],
